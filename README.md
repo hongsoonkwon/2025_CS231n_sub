@@ -1,5 +1,9 @@
 # 2025 CS231n Subtitles
 
+[영상 링크](https://www.youtube.com/watch?v=2fq9wYslV0A&list=PLoROMvodv4rOmsNzYBMe0gJY2XS8AQg16&index=1)
+[강의 자료](https://cs231n.stanford.edu/2025/)
+
+
 CS231n 2025 강의 영상에 사용할 수 있는 자막 파일 모음입니다.  
 영어 자막은 `En/`, 한국어 자막은 `ko/` 디렉토리에 들어 있습니다.
 
