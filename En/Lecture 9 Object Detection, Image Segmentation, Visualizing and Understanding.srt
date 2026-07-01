@@ -1,0 +1,5601 @@
+1
+00:00:05,270 --> 00:00:06,470
+OK.
+
+2
+00:00:06,470 --> 00:00:12,920
+Today, we'll be talking about
+different tasks of core Computer
+
+3
+00:00:12,920 --> 00:00:19,110
+Vision, algorithms and tasks,
+detection and segmentation.
+
+4
+00:00:19,110 --> 00:00:22,250
+We will also be covering
+topics around visualization
+
+5
+00:00:22,250 --> 00:00:23,700
+and understanding.
+
+6
+00:00:23,700 --> 00:00:26,275
+I will cover the
+most important ones.
+
+7
+00:00:28,820 --> 00:00:32,040
+Like the previous
+lecture last time,
+
+8
+00:00:32,040 --> 00:00:37,430
+what we discussed was around
+the topic of transitioning
+
+9
+00:00:37,430 --> 00:00:43,940
+from sequence to sequence
+models, RNNs to transformers.
+
+10
+00:00:43,940 --> 00:00:47,570
+And we saw that
+transformers were
+
+11
+00:00:47,570 --> 00:00:52,520
+defined by having some
+encoder, a number of layers,
+
+12
+00:00:52,520 --> 00:00:57,540
+which had multi-headed,
+self-attention, and layer norm,
+
+13
+00:00:57,540 --> 00:01:01,470
+as well as some MLP layers.
+
+14
+00:01:01,470 --> 00:01:06,500
+And this was, ultimately,
+called something
+
+15
+00:01:06,500 --> 00:01:10,500
+that we now refer to as
+encoder encoding the sequence.
+
+16
+00:01:10,500 --> 00:01:16,100
+And then if we need to decode an
+image or a language, a sequence
+
+17
+00:01:16,100 --> 00:01:19,970
+as the output, then similar
+type of architecture
+
+18
+00:01:19,970 --> 00:01:27,210
+is used for decoder getting
+the encoder tokens as input,
+
+19
+00:01:27,210 --> 00:01:32,660
+taking those as input, and
+then generating what is--
+
+20
+00:01:32,660 --> 00:01:34,970
+I'm hoping that you
+can see my cursor too,
+
+21
+00:01:34,970 --> 00:01:42,060
+what is the desired output.
+
+22
+00:01:42,060 --> 00:01:43,560
+We did talk--
+
+23
+00:01:43,560 --> 00:01:48,620
+Justin talked quite extensively
+about the differences
+
+24
+00:01:48,620 --> 00:01:55,470
+of modeling sequences,
+recurrent neural networks, RNNs,
+
+25
+00:01:55,470 --> 00:01:59,210
+and their variations that
+we've talked last week,
+
+26
+00:01:59,210 --> 00:02:04,940
+I think, on Tuesday about and
+then using convolution also as
+
+27
+00:02:04,940 --> 00:02:06,690
+another approach.
+
+28
+00:02:06,690 --> 00:02:10,639
+But we talked about,
+ultimately, that self-attention
+
+29
+00:02:10,639 --> 00:02:17,910
+is what we work with in many
+of the applications these days.
+
+30
+00:02:17,910 --> 00:02:24,470
+They work much better
+than the other two.
+
+31
+00:02:24,470 --> 00:02:25,590
+They are more expensive.
+
+32
+00:02:25,590 --> 00:02:31,775
+They do add computation
+and memory requirements,
+
+33
+00:02:31,775 --> 00:02:36,650
+but that comes with much
+better modeling of the sequence
+
+34
+00:02:36,650 --> 00:02:42,110
+and better results in
+terms of any of the tasks.
+
+35
+00:02:42,110 --> 00:02:48,835
+So until here, it was mostly
+talking about self-attention.
+
+36
+00:02:48,835 --> 00:02:50,210
+We also talked a
+little bit about
+
+37
+00:02:50,210 --> 00:02:55,050
+cross-attention
+and related topics.
+
+38
+00:02:55,050 --> 00:02:59,750
+And then we got to the topic
+of vision transformers, which
+
+39
+00:02:59,750 --> 00:03:02,840
+is one of the core
+models that is
+
+40
+00:03:02,840 --> 00:03:06,290
+being used in modern
+applications, Computer Vision
+
+41
+00:03:06,290 --> 00:03:07,410
+applications.
+
+42
+00:03:07,410 --> 00:03:17,330
+We did go through this in the
+last minutes of last lecture,
+
+43
+00:03:17,330 --> 00:03:18,300
+the previous lecture.
+
+44
+00:03:18,300 --> 00:03:21,030
+And I want to revisit the topic.
+
+45
+00:03:21,030 --> 00:03:26,000
+And after that, I'll stop and
+hear any questions or comments,
+
+46
+00:03:26,000 --> 00:03:28,340
+you may have regarding the
+assignments and everything
+
+47
+00:03:28,340 --> 00:03:30,830
+that I talked about so far.
+
+48
+00:03:30,830 --> 00:03:33,320
+We talked about
+the fact that what
+
+49
+00:03:33,320 --> 00:03:38,460
+we do with transformers, when
+we want to process images,
+
+50
+00:03:38,460 --> 00:03:48,440
+we split the image into patches,
+basically creating a sequence.
+
+51
+00:03:48,440 --> 00:03:57,590
+The image was split to S by
+S or in this case, maybe a 3
+
+52
+00:03:57,590 --> 00:03:59,760
+by 3 patches.
+
+53
+00:03:59,760 --> 00:04:02,630
+And each of those
+patches are then
+
+54
+00:04:02,630 --> 00:04:05,280
+represented by what
+we call tokens.
+
+55
+00:04:05,280 --> 00:04:10,610
+And tokens are often
+a linear projection
+
+56
+00:04:10,610 --> 00:04:17,810
+of the vector, the
+reshaped version
+
+57
+00:04:17,810 --> 00:04:20,100
+of the image into a vector.
+
+58
+00:04:20,100 --> 00:04:24,510
+And it's basically a
+D-dimensional vector,
+
+59
+00:04:24,510 --> 00:04:27,060
+as you can see in this slide.
+
+60
+00:04:27,060 --> 00:04:29,330
+But because we have
+turned the image
+
+61
+00:04:29,330 --> 00:04:32,210
+into patches, what
+becomes important-- what
+
+62
+00:04:32,210 --> 00:04:33,540
+are we losing here?
+
+63
+00:04:33,540 --> 00:04:36,390
+It's basically we're
+losing the position,
+
+64
+00:04:36,390 --> 00:04:38,550
+the 2D position of the image.
+
+65
+00:04:38,550 --> 00:04:43,970
+So that's why we often create
+or add something that we
+
+66
+00:04:43,970 --> 00:04:46,110
+call positional embedding.
+
+67
+00:04:46,110 --> 00:04:49,080
+And there are many different
+ways of doing this.
+
+68
+00:04:49,080 --> 00:04:53,790
+You can create a sequence, just
+put numbers of sequence as 1,
+
+69
+00:04:53,790 --> 00:04:55,290
+2, 3, and so on.
+
+70
+00:04:55,290 --> 00:05:02,250
+Or you can do a 2D version
+of x and y-coordinates,
+
+71
+00:05:02,250 --> 00:05:09,080
+and adding these two together
+creates the new token that goes
+
+72
+00:05:09,080 --> 00:05:12,350
+to the transformer
+layer the same way all
+
+73
+00:05:12,350 --> 00:05:15,020
+of the self-attention,
+layer norm,
+
+74
+00:05:15,020 --> 00:05:19,640
+and everything that we've
+talked about, MLP, everything,
+
+75
+00:05:19,640 --> 00:05:24,680
+we talked about last week.
+
+76
+00:05:24,680 --> 00:05:29,000
+And then the output layer will
+generate the output vectors
+
+77
+00:05:29,000 --> 00:05:29,615
+for us.
+
+78
+00:05:29,615 --> 00:05:32,280
+It could be used
+for any application.
+
+79
+00:05:32,280 --> 00:05:35,270
+One of the major applications
+in Computer Vision
+
+80
+00:05:35,270 --> 00:05:36,960
+has been classification.
+
+81
+00:05:36,960 --> 00:05:39,120
+We started with
+image classification.
+
+82
+00:05:39,120 --> 00:05:42,800
+So with image classification,
+what becomes important
+
+83
+00:05:42,800 --> 00:05:51,530
+is to somehow be able to
+encode or generate something
+
+84
+00:05:51,530 --> 00:05:54,960
+as the output that is
+representative of the class.
+
+85
+00:05:54,960 --> 00:06:00,380
+So what we do is often, we add
+one token, a special extra input
+
+86
+00:06:00,380 --> 00:06:05,730
+to the transformer, which is
+of the same dimensionality,
+
+87
+00:06:05,730 --> 00:06:09,440
+but it's a learnable
+parameter that
+
+88
+00:06:09,440 --> 00:06:13,670
+in the output space,
+whatever that represents
+
+89
+00:06:13,670 --> 00:06:19,590
+is going to be turned into
+the class probability vector.
+
+90
+00:06:19,590 --> 00:06:22,680
+So a C-dimensional vector, which
+is the class probabilities.
+
+91
+00:06:22,680 --> 00:06:26,670
+And that's what we often
+call the class token.
+
+92
+00:06:26,670 --> 00:06:31,790
+So this is one of the
+base and most standard way
+
+93
+00:06:31,790 --> 00:06:35,360
+of doing using ViTs,
+vision transformers,
+
+94
+00:06:35,360 --> 00:06:39,830
+for image classification.
+
+95
+00:06:39,830 --> 00:06:42,810
+But transformers are not
+only used for classification,
+
+96
+00:06:42,810 --> 00:06:45,200
+they could be used
+for many other tasks
+
+97
+00:06:45,200 --> 00:06:49,410
+that we will be covering
+some of those today as well.
+
+98
+00:06:49,410 --> 00:06:52,970
+But last week, we also talked
+about this other variant
+
+99
+00:06:52,970 --> 00:06:54,720
+of the transformers.
+
+100
+00:06:54,720 --> 00:06:56,250
+Again, same tokens.
+
+101
+00:06:56,250 --> 00:07:03,090
+And from the tokens we go
+with the transformer layers.
+
+102
+00:07:03,090 --> 00:07:05,600
+If you remember
+last time, we talked
+
+103
+00:07:05,600 --> 00:07:09,780
+about these multiple
+layers of transformers.
+
+104
+00:07:09,780 --> 00:07:13,890
+As I said, positional
+embeddings are added.
+
+105
+00:07:13,890 --> 00:07:20,130
+And here, because we see the
+entire image all together,
+
+106
+00:07:20,130 --> 00:07:22,370
+we don't have to
+do masking like we
+
+107
+00:07:22,370 --> 00:07:25,160
+did for language, because
+language is really a sequence
+
+108
+00:07:25,160 --> 00:07:29,490
+that we shouldn't be using
+the future information for.
+
+109
+00:07:29,490 --> 00:07:33,650
+And then, ultimately,
+transformers
+
+110
+00:07:33,650 --> 00:07:40,680
+give an output of a vector
+patch for each of the inputs.
+
+111
+00:07:40,680 --> 00:07:44,210
+And the other option for
+training a transformer
+
+112
+00:07:44,210 --> 00:07:48,150
+is actually to instead of
+having a separate class token,
+
+113
+00:07:48,150 --> 00:07:51,300
+just take the outputs,
+run a pooling layer,
+
+114
+00:07:51,300 --> 00:07:55,340
+and then turn that
+into a probability
+
+115
+00:07:55,340 --> 00:07:57,360
+vector for C different classes.
+
+116
+00:07:57,360 --> 00:08:00,810
+So I talked about two
+versions of transformers.
+
+117
+00:08:00,810 --> 00:08:03,540
+One of them was we're
+using a class token.
+
+118
+00:08:03,540 --> 00:08:07,920
+And the other one was we take
+all of the output tokens.
+
+119
+00:08:07,920 --> 00:08:12,110
+We apply pooling and projection
+into a vector that represents
+
+120
+00:08:12,110 --> 00:08:14,010
+the class probabilities.
+
+121
+00:08:14,010 --> 00:08:15,960
+How we supervise this?
+
+122
+00:08:15,960 --> 00:08:19,920
+It's the exact same thing
+that we talked about earlier.
+
+123
+00:08:19,920 --> 00:08:23,870
+And that was back
+propagation, defining
+
+124
+00:08:23,870 --> 00:08:27,200
+a loss function, binary
+cross-entropy, the soft log, max
+
+125
+00:08:27,200 --> 00:08:29,450
+loss, and so on.
+
+126
+00:08:29,450 --> 00:08:33,230
+So this was ViTs.
+
+127
+00:08:33,230 --> 00:08:35,103
+This is ViTs in a nutshell.
+
+128
+00:08:37,969 --> 00:08:41,840
+And over the years, this
+type of architecture
+
+129
+00:08:41,840 --> 00:08:46,490
+for many different applications
+have remained the same.
+
+130
+00:08:46,490 --> 00:08:53,300
+Many modern architectures right
+now use many of these components
+
+131
+00:08:53,300 --> 00:08:56,550
+very similar to what
+we presented here.
+
+132
+00:08:56,550 --> 00:09:00,320
+But there are some
+optimizations that we
+
+133
+00:09:00,320 --> 00:09:03,110
+had in the slides
+last week, but I
+
+134
+00:09:03,110 --> 00:09:10,170
+think I'll just spend quickly
+a couple of minutes on them.
+
+135
+00:09:10,170 --> 00:09:12,290
+But I want you to
+understand that there
+
+136
+00:09:12,290 --> 00:09:18,200
+are many different tweaks
+and optimizations for better
+
+137
+00:09:18,200 --> 00:09:21,740
+performance, and also making
+the transformers, the training
+
+138
+00:09:21,740 --> 00:09:23,870
+a little bit more stable.
+
+139
+00:09:23,870 --> 00:09:28,710
+One of them is actually
+the residual connections.
+
+140
+00:09:28,710 --> 00:09:33,900
+This layer norm is basically
+outside the residual
+
+141
+00:09:33,900 --> 00:09:38,890
+So this means that whatever
+we get here, we normalize it.
+
+142
+00:09:38,890 --> 00:09:42,860
+So this doesn't really mean
+that we can't replicate
+
+143
+00:09:42,860 --> 00:09:46,190
+any form of identity function
+anymore, that resonates really
+
+144
+00:09:46,190 --> 00:09:47,610
+wanted to do.
+
+145
+00:09:47,610 --> 00:09:50,030
+So the solution for
+that is to bring
+
+146
+00:09:50,030 --> 00:09:53,160
+in the layer normalization.
+
+147
+00:09:53,160 --> 00:09:56,210
+We often put it
+before self-attention
+
+148
+00:09:56,210 --> 00:09:59,370
+and the second one
+before the MLP layer.
+
+149
+00:09:59,370 --> 00:10:01,320
+So normalization is there.
+
+150
+00:10:01,320 --> 00:10:05,030
+But we also preserve
+our identity function.
+
+151
+00:10:05,030 --> 00:10:09,180
+There are also other
+ways of normalizing.
+
+152
+00:10:09,180 --> 00:10:13,070
+There is this RMSNorm, root
+mean square normalization,
+
+153
+00:10:13,070 --> 00:10:19,820
+which is actually a very
+basic type of normalization.
+
+154
+00:10:19,820 --> 00:10:21,620
+For each of the
+features, it doesn't
+
+155
+00:10:21,620 --> 00:10:25,590
+use the mean value of the
+feature for normalization.
+
+156
+00:10:25,590 --> 00:10:29,610
+But this makes the training
+a little bit more stable.
+
+157
+00:10:29,610 --> 00:10:38,390
+Again, these are all empirically
+shown to be better options.
+
+158
+00:10:38,390 --> 00:10:40,490
+Although there are
+some justifications
+
+159
+00:10:40,490 --> 00:10:42,040
+why while they work well.
+
+160
+00:10:42,040 --> 00:10:46,065
+But mostly, the reason
+for adopting these
+
+161
+00:10:46,065 --> 00:10:53,290
+is just the fact that they
+make the trainings more stable.
+
+162
+00:10:53,290 --> 00:10:58,380
+The other option is to
+instead of using a simple MLP,
+
+163
+00:10:58,380 --> 00:11:05,190
+we use a SwiGLU MLP, where
+we actually do some--
+
+164
+00:11:05,190 --> 00:11:08,530
+this is what we call
+gated nonlinearity.
+
+165
+00:11:08,530 --> 00:11:13,720
+Instead of having two vectors of
+weights, matrices of W1 and W2,
+
+166
+00:11:13,720 --> 00:11:16,750
+we add a third one, 1, 2, and 3.
+
+167
+00:11:16,750 --> 00:11:22,710
+But here, we create
+some gated nonlinearity.
+
+168
+00:11:22,710 --> 00:11:36,390
+Basically, what it does
+is getting more trainable
+
+169
+00:11:36,390 --> 00:11:38,700
+parameters and not
+just necessarily
+
+170
+00:11:38,700 --> 00:11:42,210
+trainable parameters, but
+creating a better nonlinearity
+
+171
+00:11:42,210 --> 00:11:43,750
+for a small architecture.
+
+172
+00:11:43,750 --> 00:11:50,250
+Even if we select the hidden
+layer value equal to 8
+
+173
+00:11:50,250 --> 00:11:53,790
+divided by 3, it
+keeps the same size
+
+174
+00:11:53,790 --> 00:11:56,200
+of the network in terms of
+the number of parameters,
+
+175
+00:11:56,200 --> 00:12:04,540
+but it does learn higher
+dimensional nonlinearities
+
+176
+00:12:04,540 --> 00:12:05,950
+in that layer.
+
+177
+00:12:05,950 --> 00:12:09,540
+The last piece is
+mixture of experts
+
+178
+00:12:09,540 --> 00:12:13,590
+that is often used in even
+the very modern architectures
+
+179
+00:12:13,590 --> 00:12:14,530
+these days.
+
+180
+00:12:14,530 --> 00:12:17,770
+Instead of having one
+set of MLP layers,
+
+181
+00:12:17,770 --> 00:12:20,560
+we can have multiple
+sets of MLP layers.
+
+182
+00:12:20,560 --> 00:12:22,720
+Each of those will be an expert.
+
+183
+00:12:22,720 --> 00:12:28,930
+And what we do is
+through a router,
+
+184
+00:12:28,930 --> 00:12:34,630
+the tokens will be routed
+to A of those E experts.
+
+185
+00:12:34,630 --> 00:12:40,360
+And in this way, we actually
+have A active experts.
+
+186
+00:12:40,360 --> 00:12:43,110
+But then, again,
+what it does is it
+
+187
+00:12:43,110 --> 00:12:48,220
+increases the number
+of parameters,
+
+188
+00:12:48,220 --> 00:12:55,200
+and it helps learning more
+robust models without increasing
+
+189
+00:12:55,200 --> 00:12:57,850
+too much on the compute.
+
+190
+00:12:57,850 --> 00:13:01,240
+And these, again, are
+all parallel MLPs.
+
+191
+00:13:01,240 --> 00:13:05,290
+So we can have multiple
+experts in parallel.
+
+192
+00:13:05,290 --> 00:13:08,430
+As I said, they are
+used in all LLMs
+
+193
+00:13:08,430 --> 00:13:10,260
+these days, large
+language models,
+
+194
+00:13:10,260 --> 00:13:15,420
+and all of the modern
+LLMs up to the level
+
+195
+00:13:15,420 --> 00:13:20,860
+that we know about are
+using these types of tweaks.
+
+196
+00:13:20,860 --> 00:13:23,520
+And this is the summary
+of all of the tweaks
+
+197
+00:13:23,520 --> 00:13:25,740
+that I just mentioned.
+
+198
+00:13:25,740 --> 00:13:28,805
+This is similar
+to [? bias. ?] No.
+
+199
+00:13:28,805 --> 00:13:32,010
+This is completely a
+trainable parameter by itself
+
+200
+00:13:32,010 --> 00:13:37,500
+that you train, either a
+feedforward network or just
+
+201
+00:13:37,500 --> 00:13:42,420
+a linear projection to turn that
+into the probability vector.
+
+202
+00:13:42,420 --> 00:13:45,570
+So it's not [? just bias. ?]
+
+203
+00:13:45,570 --> 00:13:47,550
+And then again,
+remember that you
+
+204
+00:13:47,550 --> 00:13:54,370
+have so many self-attention
+networks here, layers here.
+
+205
+00:13:54,370 --> 00:13:56,250
+And those self-attention
+layers are
+
+206
+00:13:56,250 --> 00:13:59,050
+basically fusing
+the information,
+
+207
+00:13:59,050 --> 00:14:02,190
+creating attention between all
+of the tokens and this class
+
+208
+00:14:02,190 --> 00:14:02,830
+token.
+
+209
+00:14:02,830 --> 00:14:05,260
+So when you supervise
+it from here,
+
+210
+00:14:05,260 --> 00:14:06,700
+the loss function comes in.
+
+211
+00:14:06,700 --> 00:14:13,860
+This will represent the
+class probabilities vector.
+
+212
+00:14:13,860 --> 00:14:16,800
+So the question is, if
+there are nice intuitions,
+
+213
+00:14:16,800 --> 00:14:19,920
+what different
+experts are doing?
+
+214
+00:14:19,920 --> 00:14:21,930
+That's a great question.
+
+215
+00:14:21,930 --> 00:14:24,930
+Because they are
+trained in parallel,
+
+216
+00:14:24,930 --> 00:14:27,700
+and they are
+initialized differently,
+
+217
+00:14:27,700 --> 00:14:33,630
+they often try to learn one
+aspect or a related, maybe also
+
+218
+00:14:33,630 --> 00:14:36,220
+sometimes very much
+related aspect,
+
+219
+00:14:36,220 --> 00:14:43,510
+but it's just adding more
+compute and more parameters,
+
+220
+00:14:43,510 --> 00:14:47,760
+giving the network to learn
+different things, if it
+
+221
+00:14:47,760 --> 00:14:51,160
+does have to learn
+multiple concepts.
+
+222
+00:14:51,160 --> 00:14:54,660
+For example, if you have to
+cover multiple probability
+
+223
+00:14:54,660 --> 00:14:57,400
+distributions, then
+with these MLPs,
+
+224
+00:14:57,400 --> 00:15:02,260
+you often have the power to
+separate those modes of data.
+
+225
+00:15:02,260 --> 00:15:06,150
+So the question is, if
+the number of experts
+
+226
+00:15:06,150 --> 00:15:09,370
+is a hyperparameter or not?
+
+227
+00:15:09,370 --> 00:15:11,800
+Yes, definitely, it's
+a hyperparameter.
+
+228
+00:15:11,800 --> 00:15:15,780
+From what I know,
+it's often predefined.
+
+229
+00:15:15,780 --> 00:15:18,910
+Don't necessarily like
+over fine tune them.
+
+230
+00:15:18,910 --> 00:15:21,553
+But yes, they are
+all hyperparameters.
+
+231
+00:15:21,553 --> 00:15:22,470
+They are also learned.
+
+232
+00:15:22,470 --> 00:15:23,490
+Yes.
+
+233
+00:15:23,490 --> 00:15:25,050
+And they are learned.
+
+234
+00:15:25,050 --> 00:15:30,450
+So why moving the
+layer norm helps us
+
+235
+00:15:30,450 --> 00:15:33,160
+learn identity transformation?
+
+236
+00:15:33,160 --> 00:15:35,110
+So look at this architecture.
+
+237
+00:15:35,110 --> 00:15:38,470
+Will you be able to create
+any form of identity?
+
+238
+00:15:38,470 --> 00:15:41,680
+Because right after that
+residual connection,
+
+239
+00:15:41,680 --> 00:15:44,490
+the feature values are
+changed, because you
+
+240
+00:15:44,490 --> 00:15:45,900
+have a normalization.
+
+241
+00:15:45,900 --> 00:15:48,990
+You will never have the
+identity in the features.
+
+242
+00:15:48,990 --> 00:15:53,880
+Because right after that, you
+see the layer normalization.
+
+243
+00:15:53,880 --> 00:15:57,570
+And that's why, what we
+do is we bring it in.
+
+244
+00:15:57,570 --> 00:16:04,750
+We have quite a few different
+tasks in Computer Vision.
+
+245
+00:16:04,750 --> 00:16:09,990
+And these were the core and
+the most important tasks
+
+246
+00:16:09,990 --> 00:16:13,360
+over the years for Computer
+Vision applications.
+
+247
+00:16:13,360 --> 00:16:16,900
+Although these days, we are
+solving much harder tasks.
+
+248
+00:16:16,900 --> 00:16:19,320
+And nobody cares about
+object detection anymore,
+
+249
+00:16:19,320 --> 00:16:22,510
+because now, we can just do
+it with one line of code.
+
+250
+00:16:22,510 --> 00:16:25,470
+But over the past
+10, 15 years, there
+
+251
+00:16:25,470 --> 00:16:27,000
+has been a lot of advances.
+
+252
+00:16:27,000 --> 00:16:31,230
+And we want to cover, I want
+to really cover some of those
+
+253
+00:16:31,230 --> 00:16:32,290
+today.
+
+254
+00:16:32,290 --> 00:16:35,640
+Just so if you have to design
+something new yourself,
+
+255
+00:16:35,640 --> 00:16:40,960
+you know where to look and
+how to design your models.
+
+256
+00:16:40,960 --> 00:16:43,230
+And then, ultimately,
+there is the topic
+
+257
+00:16:43,230 --> 00:16:47,310
+of visualization and
+understanding, which is very
+
+258
+00:16:47,310 --> 00:16:49,510
+important in many applications.
+
+259
+00:16:49,510 --> 00:16:52,360
+For example, if you're
+working with medical data,
+
+260
+00:16:52,360 --> 00:16:54,330
+often, the visualization
+understanding
+
+261
+00:16:54,330 --> 00:16:57,150
+is more important than
+the classification itself
+
+262
+00:16:57,150 --> 00:16:58,895
+or detection of
+tumor, for example,
+
+263
+00:16:58,895 --> 00:17:02,075
+if you want to know
+where, why, and so on.
+
+264
+00:17:06,480 --> 00:17:11,670
+The way we started the class,
+and this slide is probably
+
+265
+00:17:11,670 --> 00:17:18,030
+very much familiar to everybody,
+we talked about different tasks.
+
+266
+00:17:18,030 --> 00:17:23,290
+And for object classification,
+for the task of classification,
+
+267
+00:17:23,290 --> 00:17:24,579
+we talked about this.
+
+268
+00:17:24,579 --> 00:17:29,610
+We spent quite a lot of time
+over the first few lectures,
+
+269
+00:17:29,610 --> 00:17:33,540
+seeing how we can create a
+classifier that classifies
+
+270
+00:17:33,540 --> 00:17:37,990
+images from pixels into labels.
+
+271
+00:17:37,990 --> 00:17:45,750
+But then one of the other
+tasks important similarly
+
+272
+00:17:45,750 --> 00:17:48,130
+is semantic segmentation.
+
+273
+00:17:48,130 --> 00:17:50,110
+And within semantic
+segmentation,
+
+274
+00:17:50,110 --> 00:17:56,520
+what we care about is to assign
+a label to every single pixel
+
+275
+00:17:56,520 --> 00:18:01,110
+inside the image, turn
+each of the pixels
+
+276
+00:18:01,110 --> 00:18:08,235
+into a label that is the
+label for that object
+
+277
+00:18:08,235 --> 00:18:12,630
+or anything in the scene.
+
+278
+00:18:12,630 --> 00:18:15,600
+So basically, when
+we train a model that
+
+279
+00:18:15,600 --> 00:18:19,890
+does this at the test time,
+we want to take an image
+
+280
+00:18:19,890 --> 00:18:23,130
+and generate the same
+map as the output.
+
+281
+00:18:23,130 --> 00:18:24,910
+How do we do that?
+
+282
+00:18:24,910 --> 00:18:26,650
+There are many
+different options.
+
+283
+00:18:26,650 --> 00:18:31,140
+So let's say, what
+I can do is just
+
+284
+00:18:31,140 --> 00:18:36,330
+look at each pixel, every single
+pixel, and say what the value
+
+285
+00:18:36,330 --> 00:18:40,360
+or what the label for
+that pixel should be.
+
+286
+00:18:40,360 --> 00:18:43,270
+In the very basic form,
+as you can see here,
+
+287
+00:18:43,270 --> 00:18:46,120
+it's actually very
+much impossible.
+
+288
+00:18:46,120 --> 00:18:52,650
+It's hard to say what pixel that
+represents that specific-- what
+
+289
+00:18:52,650 --> 00:18:57,360
+object that specific pixel
+represents because there
+
+290
+00:18:57,360 --> 00:19:00,430
+is no context, if you only
+look at the pixel itself.
+
+291
+00:19:00,430 --> 00:19:04,270
+So that's why
+context is important.
+
+292
+00:19:04,270 --> 00:19:06,900
+We look at the
+surrounding areas.
+
+293
+00:19:09,475 --> 00:19:13,920
+And then if I take these
+patches and the pixel
+
+294
+00:19:13,920 --> 00:19:16,270
+in the center and the
+surrounding areas,
+
+295
+00:19:16,270 --> 00:19:19,920
+now, I can train a
+convolutional neural network
+
+296
+00:19:19,920 --> 00:19:23,300
+or any network that generates
+the output label for us.
+
+297
+00:19:23,300 --> 00:19:25,170
+It's the same
+architecture that we've
+
+298
+00:19:25,170 --> 00:19:28,090
+talked about over the quarter.
+
+299
+00:19:28,090 --> 00:19:30,660
+And you can select
+any of those that we
+
+300
+00:19:30,660 --> 00:19:32,500
+used for image classification.
+
+301
+00:19:32,500 --> 00:19:35,140
+Because now, you're
+classifying the entire image.
+
+302
+00:19:35,140 --> 00:19:38,250
+It could be a CNN, it could be
+a ResNet, it could be a ViT,
+
+303
+00:19:38,250 --> 00:19:40,290
+or whatever.
+
+304
+00:19:40,290 --> 00:19:44,880
+This is really time
+consuming because if you
+
+305
+00:19:44,880 --> 00:19:50,200
+want to run one full network for
+every single pixel in an image,
+
+306
+00:19:50,200 --> 00:19:55,050
+it will take forever to turn
+this into a segmentation map.
+
+307
+00:19:55,050 --> 00:19:58,380
+The other option
+that we can use is
+
+308
+00:19:58,380 --> 00:20:05,080
+to instead of running one
+network for every single pixel,
+
+309
+00:20:05,080 --> 00:20:07,860
+what if we train a
+neural network that
+
+310
+00:20:07,860 --> 00:20:13,770
+takes the image as the input and
+outputs the entire pixel map,
+
+311
+00:20:13,770 --> 00:20:17,380
+the segmentation map, not
+just one single label,
+
+312
+00:20:17,380 --> 00:20:20,640
+a matrix of labels?
+
+313
+00:20:20,640 --> 00:20:28,150
+And in that case, we will have
+our segmentation task solved.
+
+314
+00:20:28,150 --> 00:20:32,070
+And in order to do
+that, we need to have
+
+315
+00:20:32,070 --> 00:20:36,960
+a layer in the input that is
+the same size as the image.
+
+316
+00:20:36,960 --> 00:20:39,720
+And also in the
+output, we also need
+
+317
+00:20:39,720 --> 00:20:42,220
+some sort of an inflated layer.
+
+318
+00:20:42,220 --> 00:20:47,970
+You can't go to fully connected
+layers, and so on, because now,
+
+319
+00:20:47,970 --> 00:20:50,080
+we are generating an image.
+
+320
+00:20:50,080 --> 00:20:57,695
+And because of that, we need
+to keep the network inflated.
+
+321
+00:20:57,695 --> 00:21:03,180
+And then that's what we call,
+often, fully convolutional
+
+322
+00:21:03,180 --> 00:21:06,600
+neural networks or FCNs.
+
+323
+00:21:06,600 --> 00:21:10,725
+So with fully convolutional
+neural networks,
+
+324
+00:21:10,725 --> 00:21:13,780
+this is definitely a great idea.
+
+325
+00:21:13,780 --> 00:21:15,130
+But there is a caveat.
+
+326
+00:21:15,130 --> 00:21:16,240
+There is a problem.
+
+327
+00:21:16,240 --> 00:21:18,100
+These images are large.
+
+328
+00:21:18,100 --> 00:21:24,210
+And these networks, these
+layers will become very large.
+
+329
+00:21:24,210 --> 00:21:26,550
+And there will be
+so many parameters
+
+330
+00:21:26,550 --> 00:21:28,620
+to optimize, especially
+in the early years
+
+331
+00:21:28,620 --> 00:21:31,300
+that we didn't
+have powerful GPUs,
+
+332
+00:21:31,300 --> 00:21:34,950
+this was a bottleneck,
+a problem, a challenge
+
+333
+00:21:34,950 --> 00:21:37,210
+for training algorithms.
+
+334
+00:21:37,210 --> 00:21:40,980
+And that's why the
+algorithms evolved
+
+335
+00:21:40,980 --> 00:21:46,530
+into starting from
+full-size images going down
+
+336
+00:21:46,530 --> 00:21:49,680
+in terms of the
+resolution, making
+
+337
+00:21:49,680 --> 00:21:53,790
+the convolutions, the spatial
+resolutions smaller and smaller
+
+338
+00:21:53,790 --> 00:21:56,650
+through downsampling operations.
+
+339
+00:21:56,650 --> 00:21:59,100
+And then somewhere
+in the middle,
+
+340
+00:21:59,100 --> 00:22:02,490
+we will have a low
+resolution, but somehow thick
+
+341
+00:22:02,490 --> 00:22:05,165
+in terms of the
+number of channels.
+
+342
+00:22:05,165 --> 00:22:08,370
+And then from
+there, what we do is
+
+343
+00:22:08,370 --> 00:22:10,740
+we go back up to the
+same size of the image
+
+344
+00:22:10,740 --> 00:22:13,800
+to create the output pixel.
+
+345
+00:22:13,800 --> 00:22:19,860
+And in order to do that, we
+know how to do the downsampling.
+
+346
+00:22:19,860 --> 00:22:21,250
+Downsampling was easy.
+
+347
+00:22:21,250 --> 00:22:22,420
+We've talked about it.
+
+348
+00:22:22,420 --> 00:22:26,500
+We talked about pooling
+operation, strided convolution,
+
+349
+00:22:26,500 --> 00:22:35,460
+and several other steps
+or operations that
+
+350
+00:22:35,460 --> 00:22:37,980
+could be used here.
+
+351
+00:22:37,980 --> 00:22:41,880
+But on the upsampling
+side, we don't really
+
+352
+00:22:41,880 --> 00:22:46,770
+know how to do the upsampling
+because we don't have pooling
+
+353
+00:22:46,770 --> 00:22:55,135
+or reverse of up pooling or
+reverse strided convolutions.
+
+354
+00:22:55,135 --> 00:22:57,990
+And because of that,
+we had to invent
+
+355
+00:22:57,990 --> 00:23:04,750
+some new operations that
+reverses downsampling by itself.
+
+356
+00:23:04,750 --> 00:23:09,900
+But before I go
+to the upsampling,
+
+357
+00:23:09,900 --> 00:23:12,870
+defining what upsampling
+is, I just briefly
+
+358
+00:23:12,870 --> 00:23:21,160
+want to tell you that, maybe
+I can ask you a question.
+
+359
+00:23:21,160 --> 00:23:24,100
+How do you think this
+network is trained?
+
+360
+00:23:24,100 --> 00:23:27,540
+Because now, we have a network
+that starts from an image
+
+361
+00:23:27,540 --> 00:23:29,440
+and ends with an image.
+
+362
+00:23:29,440 --> 00:23:33,570
+And then the tools that we
+have for training this network
+
+363
+00:23:33,570 --> 00:23:37,560
+was a loss function.
+
+364
+00:23:37,560 --> 00:23:41,400
+How do you think is the best
+to train or define a loss
+
+365
+00:23:41,400 --> 00:23:44,370
+function for this network?
+
+366
+00:23:44,370 --> 00:23:47,130
+We talked about softmax loss.
+
+367
+00:23:47,130 --> 00:23:51,300
+We talked also a little bit
+about some regression losses
+
+368
+00:23:51,300 --> 00:23:53,170
+and SVM loss.
+
+369
+00:23:53,170 --> 00:23:58,650
+But assuming that we want to
+use softmax loss function,
+
+370
+00:23:58,650 --> 00:24:02,730
+how could we define this
+or train this network?
+
+371
+00:24:02,730 --> 00:24:04,680
+What would the objective be?
+
+372
+00:24:04,680 --> 00:24:09,670
+So you said mean classification
+loss for each of the pixels.
+
+373
+00:24:09,670 --> 00:24:11,950
+And that's correct.
+
+374
+00:24:11,950 --> 00:24:16,690
+You can add the loss function
+for every single pixel,
+
+375
+00:24:16,690 --> 00:24:20,200
+because every single pixel
+is doing a classification.
+
+376
+00:24:20,200 --> 00:24:24,370
+So you will have a sigma
+over all pixels of the image.
+
+377
+00:24:24,370 --> 00:24:28,720
+And the loss function is
+just a simple softmax.
+
+378
+00:24:28,720 --> 00:24:30,970
+And then you can backprop.
+
+379
+00:24:30,970 --> 00:24:33,810
+That's the entire loss
+function that you need.
+
+380
+00:24:33,810 --> 00:24:37,680
+The question is, do
+we need, what we call,
+
+381
+00:24:37,680 --> 00:24:39,340
+ground truths for training?
+
+382
+00:24:39,340 --> 00:24:41,920
+So that's actually the ground
+truths of segmentation.
+
+383
+00:24:41,920 --> 00:24:44,280
+And yes, for these
+types of algorithms,
+
+384
+00:24:44,280 --> 00:24:46,060
+because they are
+fully supervised,
+
+385
+00:24:46,060 --> 00:24:49,290
+we do need the ground
+truths label maps.
+
+386
+00:24:49,290 --> 00:24:52,470
+And early years,
+there has been a lot
+
+387
+00:24:52,470 --> 00:24:57,030
+of work doing and sitting
+down and manually labeling
+
+388
+00:24:57,030 --> 00:24:59,530
+the pixels to be able to
+train these algorithms.
+
+389
+00:24:59,530 --> 00:25:00,720
+Yes.
+
+390
+00:25:00,720 --> 00:25:04,180
+These days, we don't need
+that because we have tools.
+
+391
+00:25:04,180 --> 00:25:07,540
+But early on, in order to
+train these algorithms,
+
+392
+00:25:07,540 --> 00:25:08,990
+we needed the ground truth.
+
+393
+00:25:13,530 --> 00:25:17,260
+Very briefly, let me tell you
+what we do with upsampling.
+
+394
+00:25:17,260 --> 00:25:19,660
+Upsampling is actually
+not that hard.
+
+395
+00:25:19,660 --> 00:25:22,720
+We can use an
+unpooling operation.
+
+396
+00:25:22,720 --> 00:25:24,730
+There are different
+ways of doing it.
+
+397
+00:25:24,730 --> 00:25:26,440
+One is nearest neighbor.
+
+398
+00:25:26,440 --> 00:25:32,080
+If I want to go from a 2
+by 2 as an example here,
+
+399
+00:25:32,080 --> 00:25:34,000
+a matrix 2 by 2, 4 by 4.
+
+400
+00:25:34,000 --> 00:25:39,070
+I just need to copy the
+data for each of these,
+
+401
+00:25:39,070 --> 00:25:42,360
+take the nearest neighbor
+in the lower resolution one.
+
+402
+00:25:42,360 --> 00:25:45,300
+Or bed of nails
+is you just select
+
+403
+00:25:45,300 --> 00:25:48,810
+one of those in the
+upsampled version.
+
+404
+00:25:48,810 --> 00:25:53,850
+You only select one of
+those, the one in the corner.
+
+405
+00:25:53,850 --> 00:25:57,880
+To copy the data, replace
+everything else with zero.
+
+406
+00:25:57,880 --> 00:26:00,240
+And through multiple
+layers of convolution,
+
+407
+00:26:00,240 --> 00:26:05,250
+these values will
+start appearing.
+
+408
+00:26:05,250 --> 00:26:11,550
+If we use max pooling
+in our network,
+
+409
+00:26:11,550 --> 00:26:15,120
+in the encoding
+side, what we can do
+
+410
+00:26:15,120 --> 00:26:20,220
+is we can save the locations
+of the max, the ones that
+
+411
+00:26:20,220 --> 00:26:25,500
+were selected, and then copy
+the data in the unpooling max,
+
+412
+00:26:25,500 --> 00:26:34,930
+unpooling stage right over
+there that the max was defined.
+
+413
+00:26:34,930 --> 00:26:37,980
+So basically, we
+save the locations.
+
+414
+00:26:37,980 --> 00:26:40,350
+In the encoding part
+and in decoding part
+
+415
+00:26:40,350 --> 00:26:46,950
+in the upsampling step, we
+reuse those saved coordinates.
+
+416
+00:26:46,950 --> 00:26:51,750
+The other option is to
+do a learned upsampling.
+
+417
+00:26:51,750 --> 00:26:55,660
+All of these that I showed there
+is no parameter to be learned.
+
+418
+00:26:55,660 --> 00:26:57,370
+It's just an operation.
+
+419
+00:26:57,370 --> 00:27:01,440
+But learned upsampling
+are also possible.
+
+420
+00:27:01,440 --> 00:27:05,040
+Very simply, let's
+revisit the convolution.
+
+421
+00:27:05,040 --> 00:27:07,260
+In the convolution
+layer, what we did
+
+422
+00:27:07,260 --> 00:27:10,860
+was applying a convolution
+filter for a pixel
+
+423
+00:27:10,860 --> 00:27:13,860
+and generating the output,
+and do this repeatedly
+
+424
+00:27:13,860 --> 00:27:16,620
+for all of the pixels.
+
+425
+00:27:16,620 --> 00:27:20,400
+And when we wanted to do--
+
+426
+00:27:20,400 --> 00:27:23,610
+to downsample, what
+we did was strided
+
+427
+00:27:23,610 --> 00:27:27,220
+convolution, where, instead
+of taking steps of 1,
+
+428
+00:27:27,220 --> 00:27:31,720
+we take steps of 2, and generate
+the outputs step by step.
+
+429
+00:27:31,720 --> 00:27:34,888
+If you don't remember this
+part, go back to the lecture.
+
+430
+00:27:34,888 --> 00:27:35,680
+We talked about it.
+
+431
+00:27:35,680 --> 00:27:36,638
+Third lecture, I think.
+
+432
+00:27:39,275 --> 00:27:44,590
+And then we can replicate the
+same for the upsampling process.
+
+433
+00:27:44,590 --> 00:27:51,400
+So this one will represent this
+area in the upsampled image.
+
+434
+00:27:51,400 --> 00:27:53,670
+And then we define
+some weights here
+
+435
+00:27:53,670 --> 00:27:57,550
+to map that to the output map.
+
+436
+00:27:57,550 --> 00:27:59,830
+And then for the
+next one, same story,
+
+437
+00:27:59,830 --> 00:28:01,480
+but there will be overlaps.
+
+438
+00:28:01,480 --> 00:28:04,840
+And for the overlaps, we
+often sum over the values.
+
+439
+00:28:04,840 --> 00:28:08,320
+Let me give you an example,
+sum over the outputs.
+
+440
+00:28:08,320 --> 00:28:09,940
+Let me give you an example.
+
+441
+00:28:09,940 --> 00:28:14,680
+And that's with a
+simple 1D function.
+
+442
+00:28:14,680 --> 00:28:18,810
+If the input is just
+two values of A and B,
+
+443
+00:28:18,810 --> 00:28:24,450
+we learn a filter that that
+filter maps it to the higher
+
+444
+00:28:24,450 --> 00:28:26,206
+resolution output.
+
+445
+00:28:26,206 --> 00:28:30,000
+And for doing that, we
+just apply the filter
+
+446
+00:28:30,000 --> 00:28:34,980
+to each of the values and
+write the outputs here.
+
+447
+00:28:34,980 --> 00:28:38,550
+For the parts that there is an
+overlap, it's the summation.
+
+448
+00:28:38,550 --> 00:28:46,306
+Addition of what is coming
+from each of the two locations.
+
+449
+00:28:49,380 --> 00:28:58,575
+So we did talk about this fully
+convolutional neural networks
+
+450
+00:28:58,575 --> 00:29:00,160
+and how they are being used.
+
+451
+00:29:00,160 --> 00:29:07,500
+These are actually some of the
+most basic and mostly widely
+
+452
+00:29:07,500 --> 00:29:11,670
+used algorithms
+for segmentation.
+
+453
+00:29:11,670 --> 00:29:15,300
+And I want to
+also, very quickly,
+
+454
+00:29:15,300 --> 00:29:21,040
+highlight one of the
+widely used networks units.
+
+455
+00:29:21,040 --> 00:29:23,700
+As you can see,
+the shape U, it's
+
+456
+00:29:23,700 --> 00:29:26,020
+actually the same
+architecture as I showed here.
+
+457
+00:29:26,020 --> 00:29:31,900
+Just let's draw it as
+similar to a U shape.
+
+458
+00:29:31,900 --> 00:29:35,520
+And the reason that
+I'm highlighting this
+
+459
+00:29:35,520 --> 00:29:40,770
+is that still, today, some
+of the medical applications
+
+460
+00:29:40,770 --> 00:29:44,560
+that work on segmentation,
+use segmentation algorithms,
+
+461
+00:29:44,560 --> 00:29:53,040
+still, this unit or its variants
+generate the state-of-the art
+
+462
+00:29:53,040 --> 00:29:56,490
+results, if you don't want
+to use any foundation model.
+
+463
+00:29:56,490 --> 00:30:01,080
+So what it does is
+exactly what we explained.
+
+464
+00:30:01,080 --> 00:30:05,340
+A downsampling phase that
+increases the field of view
+
+465
+00:30:05,340 --> 00:30:08,380
+and loses some
+spatial information,
+
+466
+00:30:08,380 --> 00:30:12,570
+and then upsampling
+phase that goes back
+
+467
+00:30:12,570 --> 00:30:14,560
+to the image resolution.
+
+468
+00:30:14,560 --> 00:30:16,440
+The only difference
+that U-Net has
+
+469
+00:30:16,440 --> 00:30:20,370
+is because it's used
+for segmentation,
+
+470
+00:30:20,370 --> 00:30:24,480
+there is this
+understanding that we
+
+471
+00:30:24,480 --> 00:30:32,230
+need to keep the spatial
+information in the decoder side,
+
+472
+00:30:32,230 --> 00:30:35,500
+because when we downsample,
+we somehow lose resolution.
+
+473
+00:30:35,500 --> 00:30:38,770
+And then upsampling, if you
+don't have the information,
+
+474
+00:30:38,770 --> 00:30:40,930
+it's going to be
+a little bit hard.
+
+475
+00:30:40,930 --> 00:30:45,610
+And we often get into
+sometimes boundaries are faded.
+
+476
+00:30:45,610 --> 00:30:53,220
+And in order not to get the
+feature maps in the encoder side
+
+477
+00:30:53,220 --> 00:30:58,570
+are actually copied as
+inputs to the decoder layers.
+
+478
+00:30:58,570 --> 00:31:03,900
+In that way, you're keeping
+this structural information
+
+479
+00:31:03,900 --> 00:31:06,600
+within the image and
+generate the outputs
+
+480
+00:31:06,600 --> 00:31:09,070
+that are much sharper.
+
+481
+00:31:09,070 --> 00:31:14,050
+So this was the idea
+behind U-Net And as I said,
+
+482
+00:31:14,050 --> 00:31:17,560
+it's actually being
+used quite often.
+
+483
+00:31:17,560 --> 00:31:21,390
+Summary of semantic
+segmentation--
+
+484
+00:31:21,390 --> 00:31:24,840
+what we talked about today,
+the fully convolutional
+
+485
+00:31:24,840 --> 00:31:26,580
+neural networks.
+
+486
+00:31:26,580 --> 00:31:32,010
+You have same filter
+as before that we
+
+487
+00:31:32,010 --> 00:31:34,100
+had for downsampling here.
+
+488
+00:31:42,780 --> 00:31:45,630
+To save time, I actually
+removed some of the slides
+
+489
+00:31:45,630 --> 00:31:46,690
+from this part.
+
+490
+00:31:46,690 --> 00:31:48,370
+And I have it in the
+back of the slides.
+
+491
+00:31:48,370 --> 00:31:49,510
+You should check it out.
+
+492
+00:31:49,510 --> 00:31:51,330
+This is a reverse.
+
+493
+00:31:51,330 --> 00:31:54,130
+This is transformed
+transposed convolution.
+
+494
+00:31:54,130 --> 00:31:57,220
+So we do have a 3
+by 3 matrix here.
+
+495
+00:31:57,220 --> 00:32:03,040
+And then instead of convolving
+the input image, input data,
+
+496
+00:32:03,040 --> 00:32:05,530
+we do the convolution on the--
+
+497
+00:32:05,530 --> 00:32:09,410
+applied convolution on the
+transposed version of the input.
+
+498
+00:32:09,410 --> 00:32:12,590
+And it actually generates
+a larger output.
+
+499
+00:32:12,590 --> 00:32:16,690
+So it's the transposed
+convolution.
+
+500
+00:32:16,690 --> 00:32:20,510
+It's the reverse of the
+regular convolution.
+
+501
+00:32:20,510 --> 00:32:21,760
+But why transposed?
+
+502
+00:32:21,760 --> 00:32:25,850
+I would refer you to take a
+look at the additional slides.
+
+503
+00:32:25,850 --> 00:32:28,640
+So the question is,
+is the filter trained?
+
+504
+00:32:28,640 --> 00:32:29,140
+Yes.
+
+505
+00:32:29,140 --> 00:32:31,338
+It's very much similar to
+other convolution layers.
+
+506
+00:32:31,338 --> 00:32:32,630
+All of the filters are trained.
+
+507
+00:32:32,630 --> 00:32:33,100
+Yes.
+
+508
+00:32:33,100 --> 00:32:33,600
+Yeah.
+
+509
+00:32:38,860 --> 00:32:40,120
+Great.
+
+510
+00:32:40,120 --> 00:32:45,920
+This was the topic of
+semantic segmentation.
+
+511
+00:32:45,920 --> 00:32:51,860
+And as we talked about this, we
+only get labels for the pixels.
+
+512
+00:32:51,860 --> 00:32:55,570
+But if there are two
+instances of the same object,
+
+513
+00:32:55,570 --> 00:32:58,885
+we have no idea
+which one is which.
+
+514
+00:32:58,885 --> 00:33:07,960
+Because this is just generating
+or outputting the pixel labels.
+
+515
+00:33:07,960 --> 00:33:13,040
+And that brings us to the
+topic of instance segmentation,
+
+516
+00:33:13,040 --> 00:33:18,410
+where now, we not only care
+about the pixel classes,
+
+517
+00:33:18,410 --> 00:33:23,050
+but also, I want you to know
+that these pixels belong
+
+518
+00:33:23,050 --> 00:33:24,800
+to one instance of the dog.
+
+519
+00:33:24,800 --> 00:33:29,442
+And this next one is
+actually a different dog.
+
+520
+00:33:29,442 --> 00:33:37,430
+And for doing that, what
+we need is understanding
+
+521
+00:33:37,430 --> 00:33:41,200
+multiple objects in
+the image and brings us
+
+522
+00:33:41,200 --> 00:33:43,430
+to the topic of
+object detection.
+
+523
+00:33:43,430 --> 00:33:49,030
+Object detection has been
+one of the, besides image
+
+524
+00:33:49,030 --> 00:33:51,280
+classification or after
+image classification,
+
+525
+00:33:51,280 --> 00:33:58,020
+has been one of the core
+Computer Vision problems
+
+526
+00:33:58,020 --> 00:33:59,350
+and tasks.
+
+527
+00:33:59,350 --> 00:34:03,240
+And for many years, many,
+many different algorithms
+
+528
+00:34:03,240 --> 00:34:09,520
+were proposed for just doing
+the task of object detection.
+
+529
+00:34:09,520 --> 00:34:11,940
+We are going to fly
+over some of them
+
+530
+00:34:11,940 --> 00:34:15,040
+and highlight a couple
+of important ones.
+
+531
+00:34:15,040 --> 00:34:20,280
+But again, there are so many
+works in the literature,
+
+532
+00:34:20,280 --> 00:34:22,590
+even in the literature
+of deep learning
+
+533
+00:34:22,590 --> 00:34:30,239
+that I am not covering here,
+so in the past 10, 15 years.
+
+534
+00:34:30,239 --> 00:34:35,170
+How we can do that and solve
+the problem of object detection?
+
+535
+00:34:35,170 --> 00:34:40,330
+If it's just a single object, it
+means that we need to generate--
+
+536
+00:34:40,330 --> 00:34:42,810
+we need to do the
+classification,
+
+537
+00:34:42,810 --> 00:34:46,739
+generate a label
+class scores, as well
+
+538
+00:34:46,739 --> 00:34:50,350
+as getting a bounding
+box, coordinates of a box.
+
+539
+00:34:50,350 --> 00:34:52,650
+So we need the
+coordinates of the box
+
+540
+00:34:52,650 --> 00:34:58,360
+x, y, and h and w as the output,
+as well as what class it is.
+
+541
+00:34:58,360 --> 00:35:01,630
+So this is exactly the
+task of object detection.
+
+542
+00:35:01,630 --> 00:35:03,190
+How can we solve this?
+
+543
+00:35:03,190 --> 00:35:04,440
+It's very simple.
+
+544
+00:35:04,440 --> 00:35:11,410
+We can define a softmax loss
+function for the class scores.
+
+545
+00:35:11,410 --> 00:35:15,210
+And we can define an
+L2 loss function, which
+
+546
+00:35:15,210 --> 00:35:20,910
+is a simple distance metric,
+a regression loss for the box
+
+547
+00:35:20,910 --> 00:35:21,790
+coordinates.
+
+548
+00:35:21,790 --> 00:35:27,580
+And having these two defined,
+we have a multi-task loss.
+
+549
+00:35:27,580 --> 00:35:30,640
+We are solving two
+tasks at the same time.
+
+550
+00:35:30,640 --> 00:35:34,110
+And for doing that,
+we, again, add
+
+551
+00:35:34,110 --> 00:35:40,420
+the loss values and generate
+a compound loss function,
+
+552
+00:35:40,420 --> 00:35:43,920
+as you can see here.
+
+553
+00:35:43,920 --> 00:35:46,480
+So this is simple.
+
+554
+00:35:46,480 --> 00:35:47,760
+It's doable.
+
+555
+00:35:47,760 --> 00:35:54,780
+If you have one single
+object, you can for sure
+
+556
+00:35:54,780 --> 00:35:56,880
+solve this problem
+using this architecture
+
+557
+00:35:56,880 --> 00:35:58,060
+that I talked about.
+
+558
+00:35:58,060 --> 00:36:00,420
+But this is not that
+easy, if you have
+
+559
+00:36:00,420 --> 00:36:02,620
+multiple objects in the scene.
+
+560
+00:36:02,620 --> 00:36:07,270
+So for three objects, you have
+to generate 12 output numbers.
+
+561
+00:36:07,270 --> 00:36:09,540
+And if there are
+more, then it's going
+
+562
+00:36:09,540 --> 00:36:12,820
+to be too many
+numbers to generate.
+
+563
+00:36:12,820 --> 00:36:15,995
+So this algorithm is
+not really scalable.
+
+564
+00:36:15,995 --> 00:36:17,970
+It's just extending
+the classification
+
+565
+00:36:17,970 --> 00:36:20,560
+into some object
+detection, which is fine,
+
+566
+00:36:20,560 --> 00:36:23,040
+but it's not really scalable.
+
+567
+00:36:23,040 --> 00:36:28,270
+So when there are
+multiple objects,
+
+568
+00:36:28,270 --> 00:36:35,310
+one solution is instead of going
+or getting the entire image
+
+569
+00:36:35,310 --> 00:36:38,970
+as the input, why not to
+look at bounding boxes.
+
+570
+00:36:38,970 --> 00:36:44,800
+For each bounding box, we can
+say we only have one label,
+
+571
+00:36:44,800 --> 00:36:49,470
+and whether it's a cat or
+a dog or the background.
+
+572
+00:36:49,470 --> 00:36:56,460
+And if I have this
+way of classifying
+
+573
+00:36:56,460 --> 00:36:59,140
+each of the bounding boxes,
+I can do a sliding window.
+
+574
+00:36:59,140 --> 00:37:01,060
+I can create this
+bounding boxes,
+
+575
+00:37:01,060 --> 00:37:06,300
+slide it over the image
+from coordinate 0, 0
+
+576
+00:37:06,300 --> 00:37:10,740
+to all combination
+of x, y, and h and w,
+
+577
+00:37:10,740 --> 00:37:12,670
+and see if we can
+detect the object.
+
+578
+00:37:12,670 --> 00:37:16,080
+So step by step, I can create--
+
+579
+00:37:16,080 --> 00:37:18,090
+I can find the
+bounding boxes that I
+
+580
+00:37:18,090 --> 00:37:23,070
+have the maximum probability
+of each of the objects.
+
+581
+00:37:23,070 --> 00:37:26,140
+But there is a
+huge problem here.
+
+582
+00:37:26,140 --> 00:37:29,400
+Again, there are so many
+different combinations
+
+583
+00:37:29,400 --> 00:37:31,740
+of bounding boxes
+that you can use.
+
+584
+00:37:31,740 --> 00:37:35,820
+And again, this algorithm
+is not scalable.
+
+585
+00:37:35,820 --> 00:37:39,875
+What we've been doing in
+the literature, again,
+
+586
+00:37:39,875 --> 00:37:43,660
+early years, if you
+look at the years
+
+587
+00:37:43,660 --> 00:37:46,230
+these articles were
+published, 2014,
+
+588
+00:37:46,230 --> 00:37:52,300
+and before, there has been a
+lot of research around finding
+
+589
+00:37:52,300 --> 00:37:58,750
+regions that they
+have high probability
+
+590
+00:37:58,750 --> 00:38:00,560
+of having the object in them.
+
+591
+00:38:00,560 --> 00:38:02,540
+So region proposals.
+
+592
+00:38:02,540 --> 00:38:07,190
+And if I have a way to
+find region proposals,
+
+593
+00:38:07,190 --> 00:38:10,940
+that's actually going to
+be an easy-ish problem.
+
+594
+00:38:10,940 --> 00:38:14,740
+I can do the same thing
+as I explained earlier.
+
+595
+00:38:14,740 --> 00:38:19,490
+For an image, what we can do
+is if I have region proposals,
+
+596
+00:38:19,490 --> 00:38:23,800
+I can just take that
+part, that patch out
+
+597
+00:38:23,800 --> 00:38:29,620
+and run a CNN on that patch,
+a convolutional neural network
+
+598
+00:38:29,620 --> 00:38:31,820
+on the patch, and
+then classify it.
+
+599
+00:38:31,820 --> 00:38:33,460
+And in order to--
+
+600
+00:38:33,460 --> 00:38:37,810
+even I can refine
+the bounding boxes.
+
+601
+00:38:37,810 --> 00:38:44,680
+So classify and then
+refine the bounding boxes
+
+602
+00:38:44,680 --> 00:38:48,620
+to have the objects detected.
+
+603
+00:38:48,620 --> 00:38:51,610
+So we can classify the
+boxes and also refine
+
+604
+00:38:51,610 --> 00:38:53,470
+the bounding boxes,
+if I have to change
+
+605
+00:38:53,470 --> 00:38:55,840
+the coordinates a little bit.
+
+606
+00:38:55,840 --> 00:39:01,450
+And this is what is
+called R-CNN algorithm.
+
+607
+00:39:01,450 --> 00:39:09,010
+And although it works, and,
+again, this is one of the early
+
+608
+00:39:09,010 --> 00:39:12,860
+algorithms up to 2014.
+
+609
+00:39:12,860 --> 00:39:17,120
+These are very slow because
+for each of these boxes, again,
+
+610
+00:39:17,120 --> 00:39:20,920
+we are running a full
+convolutional neural network.
+
+611
+00:39:20,920 --> 00:39:26,500
+But there is one catch
+that what we can do
+
+612
+00:39:26,500 --> 00:39:34,780
+is instead of running
+convolutional neural network
+
+613
+00:39:34,780 --> 00:39:39,500
+on each of these boxes,
+because convolution operations,
+
+614
+00:39:39,500 --> 00:39:41,710
+they preserve the
+spatial information.
+
+615
+00:39:41,710 --> 00:39:45,020
+They either downsample
+or upsample.
+
+616
+00:39:45,020 --> 00:39:50,230
+We always have a way to track
+them where in the pixel space
+
+617
+00:39:50,230 --> 00:39:51,115
+they are.
+
+618
+00:39:51,115 --> 00:39:56,380
+So in that case, what we
+do is instead of running
+
+619
+00:39:56,380 --> 00:40:02,920
+the convolutional neural network
+on the patches, let's say,
+
+620
+00:40:02,920 --> 00:40:06,680
+we run one big convolution
+on the entire image.
+
+621
+00:40:06,680 --> 00:40:09,460
+And then now we have the
+regions in that feature
+
+622
+00:40:09,460 --> 00:40:11,900
+map, which is corresponding
+to the entire image.
+
+623
+00:40:11,900 --> 00:40:13,990
+Let's look at those regions.
+
+624
+00:40:13,990 --> 00:40:18,040
+And now, run a smaller
+CNN on top of those
+
+625
+00:40:18,040 --> 00:40:24,490
+and generate the outputs for
+each of these two outputs
+
+626
+00:40:24,490 --> 00:40:25,370
+that I want.
+
+627
+00:40:25,370 --> 00:40:27,580
+First, the box offset.
+
+628
+00:40:27,580 --> 00:40:30,010
+Should I move the
+bounding box a little bit?
+
+629
+00:40:30,010 --> 00:40:34,070
+Or what's the
+object category is?
+
+630
+00:40:34,070 --> 00:40:37,700
+So this is the fast
+version of R-CNN
+
+631
+00:40:37,700 --> 00:40:40,600
+These are some basic
+algorithms that we
+
+632
+00:40:40,600 --> 00:40:44,570
+can use convolutional neural
+networks for detecting objects,
+
+633
+00:40:44,570 --> 00:40:46,390
+their bounding boxes, and so on.
+
+634
+00:40:46,390 --> 00:40:49,480
+The question is, if the
+number of proposed regions
+
+635
+00:40:49,480 --> 00:40:51,760
+are predefined?
+
+636
+00:40:51,760 --> 00:40:53,720
+The short answer to that is yes.
+
+637
+00:40:53,720 --> 00:40:57,360
+I will talk very briefly about
+the region proposal networks do.
+
+638
+00:41:00,550 --> 00:41:03,260
+So easy algorithms.
+
+639
+00:41:03,260 --> 00:41:07,360
+One, puts the bounding boxes
+of the regions, the proposed
+
+640
+00:41:07,360 --> 00:41:08,530
+regions.
+
+641
+00:41:08,530 --> 00:41:12,650
+Under the images, one puts it on
+the feature maps of the ConvNet.
+
+642
+00:41:12,650 --> 00:41:16,460
+And both of those generate
+the output class label,
+
+643
+00:41:16,460 --> 00:41:21,160
+as well as offset of
+improving the location
+
+644
+00:41:21,160 --> 00:41:22,960
+of the detected object.
+
+645
+00:41:22,960 --> 00:41:26,620
+But this will
+mean, this requires
+
+646
+00:41:26,620 --> 00:41:35,000
+us to do that bounding
+box region proposal first,
+
+647
+00:41:35,000 --> 00:41:37,720
+and have a region proposal
+network that tells us
+
+648
+00:41:37,720 --> 00:41:40,970
+where in the image
+we should look for.
+
+649
+00:41:40,970 --> 00:41:46,480
+And there has been research
+on building region proposal
+
+650
+00:41:46,480 --> 00:41:47,980
+networks, RPNs.
+
+651
+00:41:47,980 --> 00:41:53,900
+And here, what we do is we
+just randomly start with a CNN.
+
+652
+00:41:53,900 --> 00:41:59,200
+We try to randomly start
+in different locations
+
+653
+00:41:59,200 --> 00:42:00,130
+in the image.
+
+654
+00:42:00,130 --> 00:42:03,250
+And through layers
+of convolution,
+
+655
+00:42:03,250 --> 00:42:09,370
+we refine those regions where
+they have the higher probability
+
+656
+00:42:09,370 --> 00:42:12,190
+of having an object in them,
+because we have the object
+
+657
+00:42:12,190 --> 00:42:14,600
+labels and locations.
+
+658
+00:42:14,600 --> 00:42:17,210
+So we can optimize,
+we can supervise this.
+
+659
+00:42:17,210 --> 00:42:21,500
+And then each of those also
+refine the box coordinates.
+
+660
+00:42:21,500 --> 00:42:26,920
+So basically, a region
+proposal network, what it does
+
+661
+00:42:26,920 --> 00:42:32,770
+is it refines the boxes,
+each of those boxes that
+
+662
+00:42:32,770 --> 00:42:36,010
+have a probability, a high
+probability of an object
+
+663
+00:42:36,010 --> 00:42:42,160
+in them, the output boxes.
+
+664
+00:42:42,160 --> 00:42:43,340
+The box corrections.
+
+665
+00:42:43,340 --> 00:42:47,260
+Again, I'm leaving all of the
+details about the coordinates
+
+666
+00:42:47,260 --> 00:42:50,110
+and all of these
+dimensionalities
+
+667
+00:42:50,110 --> 00:42:52,930
+for you to check
+afterwards, because they
+
+668
+00:42:52,930 --> 00:42:54,200
+will take too much time.
+
+669
+00:42:54,200 --> 00:42:57,140
+And we don't want to spend too
+much time on this algorithm.
+
+670
+00:42:57,140 --> 00:43:01,160
+But what's important here
+is back to your question,
+
+671
+00:43:01,160 --> 00:43:05,560
+we often take the
+top K, the ones
+
+672
+00:43:05,560 --> 00:43:08,380
+that have the
+highest probability
+
+673
+00:43:08,380 --> 00:43:12,320
+of having an object in them as
+the proposals for this image.
+
+674
+00:43:12,320 --> 00:43:18,230
+This is a simple image
+and only has one object.
+
+675
+00:43:18,230 --> 00:43:21,730
+So most of the
+regions are centered
+
+676
+00:43:21,730 --> 00:43:23,480
+around that single object.
+
+677
+00:43:23,480 --> 00:43:25,280
+But, in general,
+that's not the case.
+
+678
+00:43:25,280 --> 00:43:29,590
+So in many setups, we
+can have region proposals
+
+679
+00:43:29,590 --> 00:43:33,640
+used in different setups.
+
+680
+00:43:33,640 --> 00:43:37,870
+We can get different objects
+with higher probabilities.
+
+681
+00:43:37,870 --> 00:43:42,040
+With that, and after
+talking a little bit
+
+682
+00:43:42,040 --> 00:43:46,970
+about R-CNN and mask R-CNN,
+which, again, for you,
+
+683
+00:43:46,970 --> 00:43:49,940
+it's important to go
+through the details.
+
+684
+00:43:49,940 --> 00:43:55,640
+And if you can spend some time
+doing the calculations yourself,
+
+685
+00:43:55,640 --> 00:43:57,410
+that would be very good.
+
+686
+00:43:57,410 --> 00:44:01,110
+But those types of algorithms,
+R-CNN, mask R-CNN, they
+
+687
+00:44:01,110 --> 00:44:04,570
+are not being used anymore
+these days because they
+
+688
+00:44:04,570 --> 00:44:07,300
+are very heavy computationally.
+
+689
+00:44:07,300 --> 00:44:09,700
+Although it's important
+to understand how
+
+690
+00:44:09,700 --> 00:44:11,960
+we got to this point.
+
+691
+00:44:11,960 --> 00:44:15,860
+But those are for many reasons.
+
+692
+00:44:15,860 --> 00:44:19,510
+One of those reasons is that we
+need two separate networks, one
+
+693
+00:44:19,510 --> 00:44:25,180
+region proposal network, and
+then one classification and box
+
+694
+00:44:25,180 --> 00:44:26,480
+refinement network.
+
+695
+00:44:26,480 --> 00:44:32,176
+So it's like at least two
+passes for detecting objects
+
+696
+00:44:32,176 --> 00:44:35,080
+for each image.
+
+697
+00:44:35,080 --> 00:44:38,950
+That's why there
+has been advances
+
+698
+00:44:38,950 --> 00:44:45,800
+after using single stage,
+object detectors, SSDs,
+
+699
+00:44:45,800 --> 00:44:50,080
+and one of the most popular
+ones is called YOLO.
+
+700
+00:44:50,080 --> 00:44:55,090
+YOLO is probably, if you
+work with any Computer Vision
+
+701
+00:44:55,090 --> 00:44:58,880
+problem, you've heard
+about YOLO even to date.
+
+702
+00:44:58,880 --> 00:45:04,090
+Although it's a convolution
+heavy network today, at least
+
+703
+00:45:04,090 --> 00:45:07,450
+its earlier versions.
+
+704
+00:45:07,450 --> 00:45:10,520
+In many even industrial
+applications,
+
+705
+00:45:10,520 --> 00:45:16,240
+YOLO is being used as the
+base for object detection
+
+706
+00:45:16,240 --> 00:45:19,220
+because it's a fast
+object detector.
+
+707
+00:45:19,220 --> 00:45:25,100
+And it's very good in terms
+of detecting the objects.
+
+708
+00:45:25,100 --> 00:45:30,040
+What YOLO does I want
+to very briefly tell you
+
+709
+00:45:30,040 --> 00:45:31,130
+a little bit about.
+
+710
+00:45:31,130 --> 00:45:34,270
+It's basically you look
+only once in one single pass
+
+711
+00:45:34,270 --> 00:45:35,150
+on the image.
+
+712
+00:45:35,150 --> 00:45:38,750
+You generate all of
+the bounding boxes.
+
+713
+00:45:38,750 --> 00:45:48,640
+How it does it is it maps, it
+divides the image into grid of S
+
+714
+00:45:48,640 --> 00:45:52,430
+by S And in this
+example, it's 7 by 7.
+
+715
+00:45:52,430 --> 00:45:56,930
+What happens is that for
+each single box in that grid,
+
+716
+00:45:56,930 --> 00:46:02,260
+it tries to output, it creates
+a fully convolutional network
+
+717
+00:46:02,260 --> 00:46:07,660
+that outputs the probability
+of an object being
+
+718
+00:46:07,660 --> 00:46:12,770
+in that location, refinements
+of the bounding boxes.
+
+719
+00:46:12,770 --> 00:46:16,510
+So it generates B bounding
+boxes, a new hyperparameters,
+
+720
+00:46:16,510 --> 00:46:20,740
+bounding B boxes, that is the
+refinement of the object that
+
+721
+00:46:20,740 --> 00:46:22,370
+is present in that box.
+
+722
+00:46:22,370 --> 00:46:27,640
+And also, it generates the
+class probability, object class
+
+723
+00:46:27,640 --> 00:46:28,760
+probabilities.
+
+724
+00:46:28,760 --> 00:46:33,560
+And in this case, for
+example, if it's B equal to 2,
+
+725
+00:46:33,560 --> 00:46:35,860
+it generates just
+two bounding boxes
+
+726
+00:46:35,860 --> 00:46:38,380
+with different probabilities.
+
+727
+00:46:38,380 --> 00:46:43,580
+It does this for all of
+the boxes at the same time.
+
+728
+00:46:43,580 --> 00:46:45,910
+So basically, it's
+the same network
+
+729
+00:46:45,910 --> 00:46:49,900
+that is generating something
+as the output for each
+
+730
+00:46:49,900 --> 00:46:52,790
+of these bounding boxes.
+
+731
+00:46:52,790 --> 00:46:59,662
+And it does generate a
+number of different options
+
+732
+00:46:59,662 --> 00:47:00,950
+for the object.
+
+733
+00:47:00,950 --> 00:47:03,490
+And as I said,
+each of those boxes
+
+734
+00:47:03,490 --> 00:47:05,660
+are associated
+with a probability.
+
+735
+00:47:05,660 --> 00:47:07,600
+And in this example,
+the probability
+
+736
+00:47:07,600 --> 00:47:13,640
+is shown with the weights of the
+edges in each of those boxes.
+
+737
+00:47:13,640 --> 00:47:17,470
+And for these many different
+bounding boxes and object
+
+738
+00:47:17,470 --> 00:47:21,050
+probabilities, now we
+can do thresholding.
+
+739
+00:47:21,050 --> 00:47:29,300
+And also, there is an algorithm
+that they use in the paper.
+
+740
+00:47:29,300 --> 00:47:31,750
+Again, I don't want to
+go into the details--
+
+741
+00:47:31,750 --> 00:47:37,570
+non-maximum suppression,
+and some algorithms
+
+742
+00:47:37,570 --> 00:47:41,800
+with thresholding involved
+that identifies the ones that
+
+743
+00:47:41,800 --> 00:47:44,450
+have the highest probabilities.
+
+744
+00:47:44,450 --> 00:47:48,460
+So this is a simple
+implementation or use
+
+745
+00:47:48,460 --> 00:47:55,550
+of the object detection.
+
+746
+00:47:55,550 --> 00:47:58,930
+Again, this is
+something very useful.
+
+747
+00:47:58,930 --> 00:48:02,360
+If you have time, to spend
+with the repositories of YOLO.
+
+748
+00:48:02,360 --> 00:48:05,800
+There are so many different
+newer versions of YOLO
+
+749
+00:48:05,800 --> 00:48:10,730
+that is being used for many
+applications in medicine,
+
+750
+00:48:10,730 --> 00:48:13,490
+robotics, and also in many
+industrial applications.
+
+751
+00:48:13,490 --> 00:48:16,900
+So the question is, how do
+we get this second image?
+
+752
+00:48:16,900 --> 00:48:18,870
+And what's the
+intuition behind it?
+
+753
+00:48:18,870 --> 00:48:20,680
+As I said, for
+each of the grids,
+
+754
+00:48:20,680 --> 00:48:23,560
+we generate bounding boxes.
+
+755
+00:48:23,560 --> 00:48:27,310
+For this one, we generated
+two, for all others,
+
+756
+00:48:27,310 --> 00:48:28,900
+we also generate two.
+
+757
+00:48:28,900 --> 00:48:32,980
+This bee is, again, a
+probability vector/ and each
+
+758
+00:48:32,980 --> 00:48:36,670
+of these boxes are associated
+with probability of existing
+
+759
+00:48:36,670 --> 00:48:37,970
+an object in them.
+
+760
+00:48:37,970 --> 00:48:41,500
+And then if I put all of them
+together for all of the patches,
+
+761
+00:48:41,500 --> 00:48:43,390
+I have so many boxes.
+
+762
+00:48:43,390 --> 00:48:47,300
+And now each of those are
+associated with a probability.
+
+763
+00:48:51,654 --> 00:48:54,765
+Perfect
+
+764
+00:48:55,630 --> 00:48:56,595
+Let's move on.
+
+765
+00:49:00,340 --> 00:49:05,980
+And one of the more recent
+approaches for object detection
+
+766
+00:49:05,980 --> 00:49:09,500
+is deter a detection
+transformer.
+
+767
+00:49:09,500 --> 00:49:15,070
+This is purely based on
+transformers and the topic
+
+768
+00:49:15,070 --> 00:49:17,240
+that we discussed last week.
+
+769
+00:49:17,240 --> 00:49:21,100
+And also I started
+today, same type
+
+770
+00:49:21,100 --> 00:49:25,390
+of self-attention and
+cross-attention modules
+
+771
+00:49:25,390 --> 00:49:30,880
+could also generate some
+object detections and bounding
+
+772
+00:49:30,880 --> 00:49:32,080
+boxes for us.
+
+773
+00:49:32,080 --> 00:49:33,920
+And how this works?
+
+774
+00:49:33,920 --> 00:49:36,640
+This is actually not
+a very old paper,
+
+775
+00:49:36,640 --> 00:49:39,230
+2020, almost five years ago.
+
+776
+00:49:39,230 --> 00:49:41,930
+Although it's now deprecated.
+
+777
+00:49:41,930 --> 00:49:45,430
+Nobody uses this for
+real applications.
+
+778
+00:49:45,430 --> 00:49:48,340
+But it's a very
+good example of how
+
+779
+00:49:48,340 --> 00:49:51,440
+to use transformers
+for object detection.
+
+780
+00:49:51,440 --> 00:49:55,600
+And what we do here is
+basically similar to what
+
+781
+00:49:55,600 --> 00:49:57,260
+we've explained earlier.
+
+782
+00:49:57,260 --> 00:50:01,280
+We may turn the
+image into patches.
+
+783
+00:50:01,280 --> 00:50:04,480
+And then those patches
+are passed through CNNs
+
+784
+00:50:04,480 --> 00:50:06,530
+creating a token.
+
+785
+00:50:06,530 --> 00:50:09,490
+Then we add positional
+encoding the same way
+
+786
+00:50:09,490 --> 00:50:12,710
+that I explained to the patches.
+
+787
+00:50:12,710 --> 00:50:17,260
+And those define our tokens
+for the inputs, which
+
+788
+00:50:17,260 --> 00:50:22,250
+are inputs to the transformer
+encoder, a transformer encoder,
+
+789
+00:50:22,250 --> 00:50:25,570
+again, a bunch of
+self-attention layer
+
+790
+00:50:25,570 --> 00:50:28,040
+normalization or
+any normalization,
+
+791
+00:50:28,040 --> 00:50:31,720
+as well as MLP
+layers that generates
+
+792
+00:50:31,720 --> 00:50:38,860
+the output tokens after multiple
+layers of transformer encoder.
+
+793
+00:50:38,860 --> 00:50:42,950
+Then, in order to generate
+the bounding boxes,
+
+794
+00:50:42,950 --> 00:50:45,220
+this is the smart part
+for this algorithm
+
+795
+00:50:45,220 --> 00:50:49,900
+that it does take the
+encoder output tokens
+
+796
+00:50:49,900 --> 00:50:52,640
+as input in the
+transformer decoder,
+
+797
+00:50:52,640 --> 00:50:57,250
+but we also define
+some queries, which
+
+798
+00:50:57,250 --> 00:50:59,800
+are trainable
+parameters themselves
+
+799
+00:50:59,800 --> 00:51:05,830
+that each of those, for example,
+if I add five 5 queries as input
+
+800
+00:51:05,830 --> 00:51:08,900
+for queries as input, or
+10 or 20 queries as input,
+
+801
+00:51:08,900 --> 00:51:14,840
+I'm seeking up to 20 objects
+to be detected in that image.
+
+802
+00:51:14,840 --> 00:51:17,500
+And then again,
+through a combination
+
+803
+00:51:17,500 --> 00:51:24,230
+of self-attention layers in the
+beginning of this transformer
+
+804
+00:51:24,230 --> 00:51:30,860
+decoder, as well as
+cross-attention with the encoder
+
+805
+00:51:30,860 --> 00:51:32,780
+output.
+
+806
+00:51:32,780 --> 00:51:39,235
+So cross-attention and
+self-attention networks layers,
+
+807
+00:51:39,235 --> 00:51:44,600
+it generates the output values
+for each of these queries, which
+
+808
+00:51:44,600 --> 00:51:48,980
+are passed through an
+FNN, feed forward network,
+
+809
+00:51:48,980 --> 00:51:56,670
+to generate either class
+labels and the bounding boxes,
+
+810
+00:51:56,670 --> 00:52:01,760
+very similar to what we
+discussed earlier, or even
+
+811
+00:52:01,760 --> 00:52:05,150
+in some cases, it just
+says there is no object
+
+812
+00:52:05,150 --> 00:52:07,495
+to be detected.
+
+813
+00:52:07,495 --> 00:52:10,640
+And at the end, we
+have the bounding boxes
+
+814
+00:52:10,640 --> 00:52:16,190
+and the classes associated with
+bounding boxes as the output.
+
+815
+00:52:16,190 --> 00:52:19,428
+So the question is, are we
+inputting every possible box
+
+816
+00:52:19,428 --> 00:52:20,220
+to the transformer?
+
+817
+00:52:20,220 --> 00:52:20,930
+No.
+
+818
+00:52:20,930 --> 00:52:23,500
+The input here are some
+triangular parameters
+
+819
+00:52:23,500 --> 00:52:30,370
+that are representing--
+they are queries asking
+
+820
+00:52:30,370 --> 00:52:34,345
+the question that I actually
+want an object to be outwitted
+
+821
+00:52:34,345 --> 00:52:37,280
+in place of this input query.
+
+822
+00:52:37,280 --> 00:52:40,840
+So there is no box or
+anything as the input.
+
+823
+00:52:40,840 --> 00:52:43,480
+It's part of the output
+that it generates the class
+
+824
+00:52:43,480 --> 00:52:46,780
+label and the box coordinates.
+
+825
+00:52:46,780 --> 00:52:51,520
+So the question is, if the
+queries are formed in a way
+
+826
+00:52:51,520 --> 00:52:56,740
+that it actually represents what
+we want to look for and where
+
+827
+00:52:56,740 --> 00:52:58,480
+in the image.
+
+828
+00:52:58,480 --> 00:53:02,410
+In this case, what
+we are looking for
+
+829
+00:53:02,410 --> 00:53:06,670
+is defined by class labels,
+which are predefined,
+
+830
+00:53:06,670 --> 00:53:08,810
+and they are as
+part of the output.
+
+831
+00:53:08,810 --> 00:53:10,970
+So our supervision is
+based on the class labels.
+
+832
+00:53:10,970 --> 00:53:13,140
+We have a class
+probability vector.
+
+833
+00:53:13,140 --> 00:53:15,920
+Same way that we defined it
+for the other algorithms.
+
+834
+00:53:15,920 --> 00:53:20,650
+So that's how the algorithm
+knows what type of classes
+
+835
+00:53:20,650 --> 00:53:21,650
+to look for.
+
+836
+00:53:21,650 --> 00:53:25,390
+And then in terms
+of the outputs,
+
+837
+00:53:25,390 --> 00:53:28,310
+again, these outputs
+are supervised.
+
+838
+00:53:28,310 --> 00:53:31,090
+If you remember
+based on the L2 norm,
+
+839
+00:53:31,090 --> 00:53:35,110
+L2 loss of the
+ground truth boxes.
+
+840
+00:53:35,110 --> 00:53:41,500
+We're not telling anything in
+the query part what to or where
+
+841
+00:53:41,500 --> 00:53:45,740
+to look for any of the objects.
+
+842
+00:53:45,740 --> 00:53:49,450
+The training, the process
+itself is back propagating.
+
+843
+00:53:49,450 --> 00:53:52,310
+If there are any
+losses, any errors,
+
+844
+00:53:52,310 --> 00:53:55,640
+it back propagates the outputs.
+
+845
+00:53:55,640 --> 00:54:00,340
+So basically, we are
+not determining anything
+
+846
+00:54:00,340 --> 00:54:02,920
+in the beginning
+or in this part.
+
+847
+00:54:02,920 --> 00:54:09,040
+So the question was the query
+is give me up to nine objects.
+
+848
+00:54:09,040 --> 00:54:14,510
+And yes that's basically
+what this means.
+
+849
+00:54:14,510 --> 00:54:19,010
+And through the self-attention
+and cross-attention,
+
+850
+00:54:19,010 --> 00:54:22,600
+it will try to generate
+output tokens that
+
+851
+00:54:22,600 --> 00:54:25,960
+are turned into class
+and box coordinates
+
+852
+00:54:25,960 --> 00:54:29,380
+through that FNN operation.
+
+853
+00:54:29,380 --> 00:54:33,640
+Your question is, if
+the query is over there,
+
+854
+00:54:33,640 --> 00:54:35,900
+if they are image
+patches or not?
+
+855
+00:54:35,900 --> 00:54:38,480
+No, they are not image patches.
+
+856
+00:54:38,480 --> 00:54:44,270
+They are just queries
+for trainable parameters.
+
+857
+00:54:44,270 --> 00:54:47,200
+You put them in to
+generate the outputs.
+
+858
+00:54:47,200 --> 00:54:51,850
+For each of the inputs, you
+get the value as the output.
+
+859
+00:54:51,850 --> 00:54:55,810
+And that value is turned into
+class and box coordinates.
+
+860
+00:54:55,810 --> 00:54:58,130
+Again, the question is,
+what is object queries?
+
+861
+00:54:58,130 --> 00:55:00,980
+They are trainable
+learnable parameters.
+
+862
+00:55:00,980 --> 00:55:02,980
+So you initialize them.
+
+863
+00:55:02,980 --> 00:55:06,550
+The network finds the
+best values for them.
+
+864
+00:55:06,550 --> 00:55:09,010
+And that's what you
+get as the output.
+
+865
+00:55:09,010 --> 00:55:12,040
+The question is, if
+there is any intuition,
+
+866
+00:55:12,040 --> 00:55:14,710
+which FNN gets which box?
+
+867
+00:55:14,710 --> 00:55:19,720
+The short answer to that
+is, no, there's nothing
+
+868
+00:55:19,720 --> 00:55:22,280
+that stops the network from--
+
+869
+00:55:22,280 --> 00:55:24,940
+I mean, we're not
+including anything
+
+870
+00:55:24,940 --> 00:55:28,430
+that stops the network
+from generating multiple.
+
+871
+00:55:28,430 --> 00:55:32,320
+But remember, that there
+are so many self-attention
+
+872
+00:55:32,320 --> 00:55:34,930
+and cross-attention
+layers over there
+
+873
+00:55:34,930 --> 00:55:38,875
+that they are actually
+interacting with each other
+
+874
+00:55:38,875 --> 00:55:41,380
+and makes each of
+those queries match
+
+875
+00:55:41,380 --> 00:55:43,730
+with one of the output layer.
+
+876
+00:55:43,730 --> 00:55:46,880
+So it's not generating the
+exact same thing as the output.
+
+877
+00:55:46,880 --> 00:55:52,930
+And we also have control over
+supervising those FNNs as well.
+
+878
+00:55:52,930 --> 00:55:57,580
+So your question is if there are
+image segmentations, pixel level
+
+879
+00:55:57,580 --> 00:56:00,490
+segmentations as
+part of the training.
+
+880
+00:56:00,490 --> 00:56:08,040
+This algorithm does not require
+the pixel level segmentations.
+
+881
+00:56:08,040 --> 00:56:11,930
+It's only supervised based on
+class labels and bounding boxes.
+
+882
+00:56:11,930 --> 00:56:15,410
+But if you have the pixel
+level segmentations,
+
+883
+00:56:15,410 --> 00:56:17,560
+you can always turn the
+pixel level segmentations
+
+884
+00:56:17,560 --> 00:56:20,980
+into a bounding box to
+train this algorithm,
+
+885
+00:56:20,980 --> 00:56:24,130
+but it doesn't
+necessarily require that.
+
+886
+00:56:24,130 --> 00:56:26,860
+So the question is, if
+it's possible to generalize
+
+887
+00:56:26,860 --> 00:56:29,890
+unseen objects.
+
+888
+00:56:29,890 --> 00:56:32,545
+And by unseen you mean
+a new class label?
+
+889
+00:56:32,545 --> 00:56:34,360
+Yes.
+
+890
+00:56:34,360 --> 00:56:39,170
+For these types of algorithms
+that they are fully supervised,
+
+891
+00:56:39,170 --> 00:56:41,320
+often, there is no way
+because you are creating
+
+892
+00:56:41,320 --> 00:56:43,040
+class probability vector.
+
+893
+00:56:43,040 --> 00:56:45,100
+There is no way of
+adding something
+
+894
+00:56:45,100 --> 00:56:52,225
+at the end for a new class
+without previously knowing
+
+895
+00:56:52,225 --> 00:56:53,810
+there is some other classes.
+
+896
+00:56:53,810 --> 00:56:58,010
+So fully supervised networks,
+often, there is no new object.
+
+897
+00:56:58,010 --> 00:57:00,320
+We can have a background
+object or no object.
+
+898
+00:57:00,320 --> 00:57:03,080
+As you can see, we have
+the label of no object.
+
+899
+00:57:03,080 --> 00:57:07,030
+But there are many algorithms
+and mixed extensions
+
+900
+00:57:07,030 --> 00:57:08,620
+of these types of
+algorithms that are
+
+901
+00:57:08,620 --> 00:57:10,930
+used for zero-shot learning.
+
+902
+00:57:10,930 --> 00:57:13,990
+Zero shot means understanding
+finding something new
+
+903
+00:57:13,990 --> 00:57:16,940
+without having an example of
+those in the training data.
+
+904
+00:57:16,940 --> 00:57:19,640
+But it's beyond this topic.
+
+905
+00:57:19,640 --> 00:57:25,150
+What happens if you have more
+objects in the scene than what
+
+906
+00:57:25,150 --> 00:57:27,910
+you put in as the query?
+
+907
+00:57:27,910 --> 00:57:29,900
+So that's a great question.
+
+908
+00:57:29,900 --> 00:57:34,300
+It often generates the ones
+that has the highest confidence
+
+909
+00:57:34,300 --> 00:57:36,490
+on the objects,
+so bounding boxes
+
+910
+00:57:36,490 --> 00:57:38,030
+with the highest confidence.
+
+911
+00:57:38,030 --> 00:57:40,240
+And in those cases,
+you often want
+
+912
+00:57:40,240 --> 00:57:44,220
+to add more queries just so
+you can get more objects.
+
+913
+00:57:47,050 --> 00:57:48,580
+I'll be here to
+answer questions,
+
+914
+00:57:48,580 --> 00:57:50,840
+if you have any after the class.
+
+915
+00:57:50,840 --> 00:57:54,890
+But we have a bunch of
+other topics to cover,
+
+916
+00:57:54,890 --> 00:57:57,080
+and I want to make
+sure we go over them.
+
+917
+00:57:57,080 --> 00:58:01,250
+At least you get
+familiar with the topics.
+
+918
+00:58:01,250 --> 00:58:04,750
+So with the object
+detections, now back
+
+919
+00:58:04,750 --> 00:58:07,250
+to the question I
+was asked earlier,
+
+920
+00:58:07,250 --> 00:58:10,240
+how can we use those
+types of algorithms
+
+921
+00:58:10,240 --> 00:58:13,130
+for instance segmentation?
+
+922
+00:58:13,130 --> 00:58:15,140
+And that's actually
+not too hard.
+
+923
+00:58:15,140 --> 00:58:18,640
+We talked about
+this when we were
+
+924
+00:58:18,640 --> 00:58:24,440
+talking about R-CNN algorithms,
+where we run a CNN on the image.
+
+925
+00:58:24,440 --> 00:58:27,430
+Then we have a region
+proposal network that
+
+926
+00:58:27,430 --> 00:58:29,450
+gives us the bounding boxes.
+
+927
+00:58:29,450 --> 00:58:35,560
+And those bounding boxes are
+turned into either class labels
+
+928
+00:58:35,560 --> 00:58:38,750
+and bounding box refinements.
+
+929
+00:58:38,750 --> 00:58:43,970
+So this is what we've talked
+so far with R-CNN and so on.
+
+930
+00:58:43,970 --> 00:58:46,840
+Now, we can turn this
+into a mask R-CNN
+
+931
+00:58:46,840 --> 00:58:49,960
+that also generates the mask.
+
+932
+00:58:49,960 --> 00:58:54,680
+So basically, same architecture
+that we talked about earlier.
+
+933
+00:58:54,680 --> 00:59:01,450
+Now, we can take one more
+output, make it more multitask
+
+934
+00:59:01,450 --> 00:59:04,700
+and generate the
+mask predictions.
+
+935
+00:59:04,700 --> 00:59:07,570
+So what we used to
+be doing before was,
+
+936
+00:59:07,570 --> 00:59:12,880
+again, image, region proposals,
+CNN, gives us class label
+
+937
+00:59:12,880 --> 00:59:14,840
+and the box coordinates.
+
+938
+00:59:14,840 --> 00:59:18,910
+Now, we add another
+layer of convolution
+
+939
+00:59:18,910 --> 00:59:26,360
+that generates the masks for
+that object in the pixel level.
+
+940
+00:59:26,360 --> 00:59:28,990
+And that mask, again,
+could be the same size
+
+941
+00:59:28,990 --> 00:59:35,450
+as the input and the image, and,
+basically, on the layer itself.
+
+942
+00:59:35,450 --> 00:59:37,580
+If we use fully convolutional
+neural networks,
+
+943
+00:59:37,580 --> 00:59:40,000
+that's what we often
+get as the output.
+
+944
+00:59:40,000 --> 00:59:44,390
+For each of the objects,
+when we have that tiny box,
+
+945
+00:59:44,390 --> 00:59:47,630
+we can always get
+the mask for that.
+
+946
+00:59:47,630 --> 00:59:52,430
+The chair in different
+settings of the box itself,
+
+947
+00:59:52,430 --> 00:59:58,460
+if you have different boxes,
+the bed and the human,
+
+948
+00:59:58,460 --> 01:00:00,740
+the baby in the image.
+
+949
+01:00:00,740 --> 01:00:04,700
+And this is an extension
+of the R-CNN algorithm,
+
+950
+01:00:04,700 --> 01:00:07,420
+which we call mask R-CNN.
+
+951
+01:00:07,420 --> 01:00:14,380
+And with mask R-CNN, the results
+have been very, very good
+
+952
+01:00:14,380 --> 01:00:21,850
+in detecting different objects,
+different known objects that we
+
+953
+01:00:21,850 --> 01:00:23,780
+could train the algorithms for.
+
+954
+01:00:23,780 --> 01:00:29,920
+And then there are so many
+APIs and open source versions
+
+955
+01:00:29,920 --> 01:00:34,670
+of object detectors
+that you can explore.
+
+956
+01:00:34,670 --> 01:00:37,460
+There are some links
+and resources here,
+
+957
+01:00:37,460 --> 01:00:40,870
+but this all,
+basically, rounds up
+
+958
+01:00:40,870 --> 01:00:45,727
+and summarizes some of the
+tasks that we wanted to cover.
+
+959
+01:00:45,727 --> 01:00:47,560
+And they are actually
+very important for you
+
+960
+01:00:47,560 --> 01:00:49,190
+to understand these tasks.
+
+961
+01:00:49,190 --> 01:00:52,400
+They have been core
+Computer Vision tasks.
+
+962
+01:00:52,400 --> 01:00:56,570
+Although these days, Computer
+Vision is very more advanced.
+
+963
+01:00:56,570 --> 01:00:59,270
+They are not bound
+to these tasks.
+
+964
+01:00:59,270 --> 01:01:03,430
+But if you have industrial
+applications, for example,
+
+965
+01:01:03,430 --> 01:01:09,310
+quality control of
+separating rotten tomatoes
+
+966
+01:01:09,310 --> 01:01:12,380
+and good tomatoes in
+an industrial pipeline.
+
+967
+01:01:12,380 --> 01:01:14,050
+Then with Computer
+Vision, you need
+
+968
+01:01:14,050 --> 01:01:15,880
+to be able to detect
+objects and then
+
+969
+01:01:15,880 --> 01:01:19,780
+classify them into good or bad.
+
+970
+01:01:19,780 --> 01:01:22,540
+That's why it's important
+to still understand and know
+
+971
+01:01:22,540 --> 01:01:26,510
+these steps and pipelines and
+how to do them in real time.
+
+972
+01:01:26,510 --> 01:01:29,170
+But now, there are
+larger scale models
+
+973
+01:01:29,170 --> 01:01:31,660
+that you are all familiar with.
+
+974
+01:01:31,660 --> 01:01:36,340
+This summarizes the first
+part, the Computer Vision tasks
+
+975
+01:01:36,340 --> 01:01:37,610
+that I wanted to talk about.
+
+976
+01:01:37,610 --> 01:01:40,480
+And the last piece that I
+want to spend 10 minutes on
+
+977
+01:01:40,480 --> 01:01:46,330
+is around visualization
+and understanding.
+
+978
+01:01:46,330 --> 01:01:50,320
+Again, this has been a
+big lecture by itself.
+
+979
+01:01:50,320 --> 01:01:57,040
+And in 2050, 60, until 2020s
+that the topic of computer
+
+980
+01:01:57,040 --> 01:02:01,810
+and even before that 2014, '13
+the topic of visualizing neural
+
+981
+01:02:01,810 --> 01:02:06,755
+networks has been very
+hot and very much--
+
+982
+01:02:09,840 --> 01:02:12,560
+it helped us gain
+understanding into what
+
+983
+01:02:12,560 --> 01:02:14,040
+the networks are learning.
+
+984
+01:02:14,040 --> 01:02:16,500
+And I'm going to
+summarize some of those,
+
+985
+01:02:16,500 --> 01:02:20,285
+the most important ones
+here that you may need
+
+986
+01:02:20,285 --> 01:02:22,470
+to use in your applications.
+
+987
+01:02:22,470 --> 01:02:26,660
+But before that, let me go
+back to the linear classifier
+
+988
+01:02:26,660 --> 01:02:28,760
+that we talked about.
+
+989
+01:02:28,760 --> 01:02:33,240
+We spent quite a lot of
+time on linear classifiers.
+
+990
+01:02:33,240 --> 01:02:37,710
+And with the linear classifiers,
+what we did was at the end,
+
+991
+01:02:37,710 --> 01:02:43,100
+we said, if I look at the linear
+function, what the network is
+
+992
+01:02:43,100 --> 01:02:46,472
+learning, I can have a template
+for each of those classes.
+
+993
+01:02:46,472 --> 01:02:47,930
+Like for example,
+for this car, you
+
+994
+01:02:47,930 --> 01:02:52,310
+can always see a front
+facing car as a template.
+
+995
+01:02:52,310 --> 01:02:55,100
+We can do the same
+with neural networks.
+
+996
+01:02:55,100 --> 01:02:57,630
+If I visualize one
+of the filters,
+
+997
+01:02:57,630 --> 01:03:01,740
+so here, we visualize the
+weights of the linear function.
+
+998
+01:03:01,740 --> 01:03:03,300
+It was the visual viewpoint.
+
+999
+01:03:03,300 --> 01:03:06,140
+I can do the same with linear--
+
+1000
+01:03:06,140 --> 01:03:11,700
+sorry with visualizing the
+filters in the neural networks.
+
+1001
+01:03:11,700 --> 01:03:15,080
+So for each of the
+filters, the network
+
+1002
+01:03:15,080 --> 01:03:20,510
+is, for example, is learning
+something that is basically
+
+1003
+01:03:20,510 --> 01:03:25,980
+some of the basic shapes,
+orientations, or simple shapes,
+
+1004
+01:03:25,980 --> 01:03:28,040
+as you can see here.
+
+1005
+01:03:28,040 --> 01:03:32,720
+Although this visualization, we
+can only do it for the layers
+
+1006
+01:03:32,720 --> 01:03:33,950
+that we have few channels.
+
+1007
+01:03:33,950 --> 01:03:36,150
+Like, for example, if
+we have three channels,
+
+1008
+01:03:36,150 --> 01:03:39,330
+I can put them in an RGB
+image and just visualize it.
+
+1009
+01:03:39,330 --> 01:03:42,690
+But as you remember, in
+CNNs, that was not the case.
+
+1010
+01:03:42,690 --> 01:03:50,420
+In CNNs, we had different
+sometimes quite a few channels
+
+1011
+01:03:50,420 --> 01:03:53,660
+in the middle layer, so it's
+not easy to visualize those
+
+1012
+01:03:53,660 --> 01:03:55,050
+in something that we can see.
+
+1013
+01:03:55,050 --> 01:03:57,770
+But that's what
+you basically see.
+
+1014
+01:03:57,770 --> 01:04:00,570
+In earlier layers that
+we have fewer channels,
+
+1015
+01:04:00,570 --> 01:04:03,590
+we can visualize them and
+see the network is actually
+
+1016
+01:04:03,590 --> 01:04:04,800
+learning some patterns.
+
+1017
+01:04:04,800 --> 01:04:06,920
+So it starts learning patterns.
+
+1018
+01:04:06,920 --> 01:04:14,960
+And then later stages, it
+gets more holistic and bigger
+
+1019
+01:04:14,960 --> 01:04:21,200
+patterns as if we train--
+
+1020
+01:04:21,200 --> 01:04:26,130
+sorry, if we run something that
+we call guided back propagation,
+
+1021
+01:04:26,130 --> 01:04:30,560
+we can also visualize those,
+but not as simple as this.
+
+1022
+01:04:30,560 --> 01:04:34,310
+I want to highlight
+a couple of ways
+
+1023
+01:04:34,310 --> 01:04:39,350
+of understanding and visualizing
+the neural networks, which
+
+1024
+01:04:39,350 --> 01:04:41,190
+are actually important.
+
+1025
+01:04:41,190 --> 01:04:47,060
+One is the concept of saliency.
+
+1026
+01:04:47,060 --> 01:04:50,330
+So in many applications,
+it's very important for you
+
+1027
+01:04:50,330 --> 01:04:53,070
+to know which pixel matters.
+
+1028
+01:04:53,070 --> 01:04:55,200
+For example, in a
+medical application,
+
+1029
+01:04:55,200 --> 01:04:58,890
+when you do a classification
+of tumor versus none,
+
+1030
+01:04:58,890 --> 01:05:01,550
+you want to see which
+parts of that image
+
+1031
+01:05:01,550 --> 01:05:03,540
+is actually the tumor.
+
+1032
+01:05:03,540 --> 01:05:05,850
+Because if you want
+to automate this,
+
+1033
+01:05:05,850 --> 01:05:09,090
+nobody cares about knowing
+if there is tumor or not.
+
+1034
+01:05:09,090 --> 01:05:12,500
+Everybody cares about where
+in the image the tumor is.
+
+1035
+01:05:12,500 --> 01:05:17,210
+So in order to do that,
+simplest application
+
+1036
+01:05:17,210 --> 01:05:21,890
+is we train a network, a
+feedforward neural network that
+
+1037
+01:05:21,890 --> 01:05:26,040
+generates the value or
+the class label doc.
+
+1038
+01:05:26,040 --> 01:05:31,940
+But what we can do is we can--
+
+1039
+01:05:31,940 --> 01:05:35,670
+actually, before I showed
+you that, in this case,
+
+1040
+01:05:35,670 --> 01:05:38,450
+in order to train this
+network, what we've done was
+
+1041
+01:05:38,450 --> 01:05:45,660
+we always took the derivative of
+the neural network, the weights,
+
+1042
+01:05:45,660 --> 01:05:50,000
+sorry, of the loss or of
+the class score with respect
+
+1043
+01:05:50,000 --> 01:05:53,204
+to the weights in order
+to update the weights.
+
+1044
+01:05:53,204 --> 01:05:56,340
+Now, what I need
+is for each pixel,
+
+1045
+01:05:56,340 --> 01:06:03,380
+I want to see how much
+changing the pixel value
+
+1046
+01:06:03,380 --> 01:06:06,740
+would affect the dog score?
+
+1047
+01:06:06,740 --> 01:06:07,830
+What does this mean?
+
+1048
+01:06:07,830 --> 01:06:12,950
+What I explained is the
+meaning of the variation.
+
+1049
+01:06:12,950 --> 01:06:19,080
+So this means that the
+meaning of basically gradient.
+
+1050
+01:06:19,080 --> 01:06:23,000
+So if I take the gradient
+of the score with respect
+
+1051
+01:06:23,000 --> 01:06:26,000
+to now the pixel values,
+not the network weights
+
+1052
+01:06:26,000 --> 01:06:30,680
+anymore, with pixel values, I
+can visualize those gradients.
+
+1053
+01:06:30,680 --> 01:06:33,650
+And visualizing those
+means that these
+
+1054
+01:06:33,650 --> 01:06:36,000
+are the pixels that matter.
+
+1055
+01:06:36,000 --> 01:06:40,020
+In order to classify
+dog on this image,
+
+1056
+01:06:40,020 --> 01:06:41,700
+those are the
+pixels that matter.
+
+1057
+01:06:41,700 --> 01:06:44,840
+So if I change the
+values of those pixels,
+
+1058
+01:06:44,840 --> 01:06:48,590
+the dog score will be changed.
+
+1059
+01:06:48,590 --> 01:06:52,280
+Again, this is the basic meaning
+and definition of gradients
+
+1060
+01:06:52,280 --> 01:06:53,970
+that we've talked about.
+
+1061
+01:06:53,970 --> 01:06:56,160
+So this is one way.
+
+1062
+01:06:56,160 --> 01:06:59,630
+If you run this on
+different objects
+
+1063
+01:06:59,630 --> 01:07:02,700
+that you've trained
+in the network,
+
+1064
+01:07:02,700 --> 01:07:07,220
+then this is what you get.
+
+1065
+01:07:07,220 --> 01:07:12,080
+So that's one way of
+understanding saliency.
+
+1066
+01:07:12,080 --> 01:07:14,790
+And it's very effective
+in many cases.
+
+1067
+01:07:14,790 --> 01:07:19,790
+But sometimes it's not
+just about the pixel values
+
+1068
+01:07:19,790 --> 01:07:21,810
+all the way to the back.
+
+1069
+01:07:21,810 --> 01:07:25,640
+You want to see for
+each of the classes
+
+1070
+01:07:25,640 --> 01:07:28,770
+how the activations work.
+
+1071
+01:07:28,770 --> 01:07:32,330
+And this brings us to
+class activation maps
+
+1072
+01:07:32,330 --> 01:07:37,010
+or CAM algorithm, class
+activation mapping, CAM
+
+1073
+01:07:37,010 --> 01:07:40,760
+or Grad-CAM that I'll
+talk about in two minutes,
+
+1074
+01:07:40,760 --> 01:07:44,900
+are one of the most
+and widely used
+
+1075
+01:07:44,900 --> 01:07:47,430
+algorithms for
+understanding CNNs,
+
+1076
+01:07:47,430 --> 01:07:49,950
+and also could be used for
+other architectures too.
+
+1077
+01:07:49,950 --> 01:07:53,360
+But for transformers, we
+have a much better way
+
+1078
+01:07:53,360 --> 01:07:56,900
+of making sense of
+those, which actually we
+
+1079
+01:07:56,900 --> 01:07:59,090
+talked in the last lecture.
+
+1080
+01:07:59,090 --> 01:08:04,100
+So what happens is that for
+each of the convolution layers,
+
+1081
+01:08:04,100 --> 01:08:06,200
+we often do pooling.
+
+1082
+01:08:06,200 --> 01:08:08,220
+And the pooling
+generates feature maps.
+
+1083
+01:08:08,220 --> 01:08:11,400
+The feature maps are
+then turned into scores.
+
+1084
+01:08:11,400 --> 01:08:20,134
+And those scores with those
+values of the weights.
+
+1085
+01:08:20,134 --> 01:08:24,950
+If we extend the math,
+basically, we simply
+
+1086
+01:08:24,950 --> 01:08:29,430
+can highlight the class
+scores in a weighted sum form.
+
+1087
+01:08:29,430 --> 01:08:35,359
+And this means that we can
+trace back class predictions
+
+1088
+01:08:35,359 --> 01:08:39,500
+all the way back
+to the feature maps
+
+1089
+01:08:39,500 --> 01:08:42,060
+and in specific
+locations of the space,
+
+1090
+01:08:42,060 --> 01:08:44,630
+because convolution
+layers are always
+
+1091
+01:08:44,630 --> 01:08:47,379
+mapped to a space in
+the image space two.
+
+1092
+01:08:47,379 --> 01:08:52,850
+We do convolution as the
+spatial consistency across all
+
+1093
+01:08:52,850 --> 01:08:55,729
+of the operations can
+help us trace back
+
+1094
+01:08:55,729 --> 01:08:58,140
+all the way to the image space.
+
+1095
+01:08:58,140 --> 01:09:02,180
+So anyways, we can look
+at the feature maps
+
+1096
+01:09:02,180 --> 01:09:04,890
+and see how the
+class activations,
+
+1097
+01:09:04,890 --> 01:09:06,859
+each of these
+classes are actually
+
+1098
+01:09:06,859 --> 01:09:11,040
+impacting those
+locations in the image.
+
+1099
+01:09:11,040 --> 01:09:16,880
+And with that now, if I do
+this multiplication of weights
+
+1100
+01:09:16,880 --> 01:09:21,470
+versus the weights
+that we've learned
+
+1101
+01:09:21,470 --> 01:09:26,160
+on top of the feature values, we
+create some class activations.
+
+1102
+01:09:26,160 --> 01:09:31,100
+And this means that I have a
+way now to go back to the image
+
+1103
+01:09:31,100 --> 01:09:33,810
+space, because as long as
+I'm in the convolution space,
+
+1104
+01:09:33,810 --> 01:09:36,080
+I can go all the way
+back to the image
+
+1105
+01:09:36,080 --> 01:09:41,060
+and create these maps of, for
+example, for each of the classes
+
+1106
+01:09:41,060 --> 01:09:46,850
+palace, dome, church,
+altar, and monastery,
+
+1107
+01:09:46,850 --> 01:09:52,529
+we can have different
+class activation maps.
+
+1108
+01:09:52,529 --> 01:09:54,270
+These are the weights.
+
+1109
+01:09:54,270 --> 01:09:57,380
+These are the pixels or areas
+of the convolution layer
+
+1110
+01:09:57,380 --> 01:10:01,220
+that have been
+driving the scores
+
+1111
+01:10:01,220 --> 01:10:06,260
+for these specific classes.
+
+1112
+01:10:06,260 --> 01:10:09,920
+It's the same for others,
+like class activation maps
+
+1113
+01:10:09,920 --> 01:10:14,000
+for one single object
+in different images.
+
+1114
+01:10:14,000 --> 01:10:15,780
+But there is a
+problem with this.
+
+1115
+01:10:15,780 --> 01:10:18,050
+And that problem
+is that we can only
+
+1116
+01:10:18,050 --> 01:10:21,090
+apply this to the last
+convolution layer,
+
+1117
+01:10:21,090 --> 01:10:23,910
+because this is the
+only way we can do it.
+
+1118
+01:10:23,910 --> 01:10:26,550
+We can only go to the
+last convolution layer.
+
+1119
+01:10:26,550 --> 01:10:29,550
+The way that we did
+the calculations here.
+
+1120
+01:10:29,550 --> 01:10:32,390
+And in order to
+solve that problem,
+
+1121
+01:10:32,390 --> 01:10:34,640
+there is one variant
+of the algorithm
+
+1122
+01:10:34,640 --> 01:10:38,990
+called Grad-CAM, so
+gradient-weighted class
+
+1123
+01:10:38,990 --> 01:10:40,170
+activation maps.
+
+1124
+01:10:40,170 --> 01:10:43,040
+It's basically the
+same algorithm.
+
+1125
+01:10:43,040 --> 01:10:46,850
+We need to weight calculate the
+weights with respect to the--
+
+1126
+01:10:46,850 --> 01:10:52,160
+we basically take
+one of the layers
+
+1127
+01:10:52,160 --> 01:10:54,900
+that created some activation.
+
+1128
+01:10:54,900 --> 01:10:59,130
+In the class level, we
+compute the gradients,
+
+1129
+01:10:59,130 --> 01:11:03,170
+instead of just calculating
+the multiplication between W
+
+1130
+01:11:03,170 --> 01:11:04,760
+and feature.
+
+1131
+01:11:04,760 --> 01:11:07,640
+We go all the way back
+with the gradients
+
+1132
+01:11:07,640 --> 01:11:11,180
+and create a weight
+based on the gradients,
+
+1133
+01:11:11,180 --> 01:11:15,900
+and then that is used
+instead of the weights,
+
+1134
+01:11:15,900 --> 01:11:17,810
+it's aggregate of
+all of the weights
+
+1135
+01:11:17,810 --> 01:11:20,700
+and gradients up to
+that specific layer.
+
+1136
+01:11:20,700 --> 01:11:24,960
+And then we weight
+that with that.
+
+1137
+01:11:24,960 --> 01:11:32,850
+And then we also use ReLU
+to pass the positive ones.
+
+1138
+01:11:32,850 --> 01:11:36,170
+And then that could
+also be all the way
+
+1139
+01:11:36,170 --> 01:11:38,910
+shown in the image space.
+
+1140
+01:11:38,910 --> 01:11:43,820
+So I talked about CAM,
+which was only applied
+
+1141
+01:11:43,820 --> 01:11:45,600
+to the last convolution layer.
+
+1142
+01:11:45,600 --> 01:11:47,260
+If you want to--
+
+1143
+01:11:47,260 --> 01:11:51,660
+but this is not possible because
+in most of the CNN algorithms,
+
+1144
+01:11:51,660 --> 01:11:55,990
+we don't have just one
+convolution layer at the end.
+
+1145
+01:11:55,990 --> 01:11:59,860
+We always have some operations
+fully connected and so on.
+
+1146
+01:11:59,860 --> 01:12:03,870
+So in order to be able to
+carry this class activation
+
+1147
+01:12:03,870 --> 01:12:06,390
+to the convolution
+layer, if there
+
+1148
+01:12:06,390 --> 01:12:10,230
+is something else in the middle,
+we often use the gradients
+
+1149
+01:12:10,230 --> 01:12:17,560
+and basically weigh the maps
+with the gradients aggregates.
+
+1150
+01:12:17,560 --> 01:12:20,410
+And then we can actually
+do the visualization.
+
+1151
+01:12:20,410 --> 01:12:24,060
+They create these heat maps
+for each of the objects.
+
+1152
+01:12:24,060 --> 01:12:26,980
+So this was about CNNs.
+
+1153
+01:12:26,980 --> 01:12:32,310
+But we talked about transformers
+last week in the last lecture
+
+1154
+01:12:32,310 --> 01:12:37,270
+that they inherently come
+with the activation maps.
+
+1155
+01:12:37,270 --> 01:12:41,610
+Do you remember
+that language matrix
+
+1156
+01:12:41,610 --> 01:12:45,660
+that Justin showed, that for
+each of the output words,
+
+1157
+01:12:45,660 --> 01:12:47,820
+there is a tension
+weight for the input.
+
+1158
+01:12:47,820 --> 01:12:50,610
+We can do that, the same
+thing for the pixels.
+
+1159
+01:12:50,610 --> 01:12:54,140
+For each of the outputs,
+we can create these maps
+
+1160
+01:12:54,140 --> 01:13:00,110
+in the pixel space and visualize
+the features of the ViTs
+
+1161
+01:13:00,110 --> 01:13:01,020
+in the pixel space.
+
+1162
+01:13:01,020 --> 01:13:03,140
+So basically, with
+ViTs and transformers,
+
+1163
+01:13:03,140 --> 01:13:04,410
+this is much easier.
+
+1164
+01:13:04,410 --> 01:13:09,080
+We already have a
+way to visualize
+
+1165
+01:13:09,080 --> 01:13:11,730
+the attentions, the weights.
+
+1166
+01:13:11,730 --> 01:13:16,880
+But with CNNs, we
+often use Grad-CAM
+
+1167
+01:13:16,880 --> 01:13:19,830
+or these types of algorithms.
+
+1168
+01:13:19,830 --> 01:13:24,530
+That said, I did
+this task that I
+
+1169
+01:13:24,530 --> 01:13:29,180
+thought I wouldn't be able
+to, completing the topics I
+
+1170
+01:13:29,180 --> 01:13:31,350
+wanted to talk about today.
+
+1171
+01:13:31,350 --> 01:13:35,000
+And next session,
+we'll have the lecture
+
+1172
+01:13:35,000 --> 01:13:36,810
+around video understanding.
+
+1173
+01:13:36,810 --> 01:13:38,740
+Thank you.
