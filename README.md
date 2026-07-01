@@ -1,6 +1,7 @@
 # 2025 CS231n Subtitles
 
 [영상 링크](https://www.youtube.com/watch?v=2fq9wYslV0A&list=PLoROMvodv4rOmsNzYBMe0gJY2XS8AQg16&index=1)
+
 [강의 자료](https://cs231n.stanford.edu/2025/)
 
 
